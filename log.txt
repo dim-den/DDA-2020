@@ -1,0 +1,82 @@
+Тест: без ошибок
+
+ ------ ПРОТОКОЛ ------
+ Дата: 22.10.20 11:03:05 
+
+ ------ Параметры ------ 
+-log: log.txt
+-out: out.txt
+-in:  in.txt
+
+ ------ Таблица лексем ------ 
+
+001 tfi(ti,ti)
+002 {
+003 dti;
+004 i=iv(ivi);
+005 ri;
+006 }
+008 tfi(ti,ti)
+009 {
+011 dti;
+012 dtfi(ti,ti,ti);
+013 i=i(i,l,l)vi;
+014 ri;
+015 }
+017 m
+018 {
+019 dti;
+020 dti;
+021 dti;
+022 dti;
+023 dti=l;
+024 dti;
+025 dti;
+026 dti;
+027 dtfi(ti);
+028 i=l;
+029 i=l;
+030 i=l;
+031 i=l;
+032 i=i(i,i);
+033 i=i(i,i);
+034 pl;
+035 pi;
+036 pi(i);
+037 rl;
+038 }
+
+ 		------ Таблица идентификаторов ------ 
+
+Имя	  Область видимости	Индекс	Тип		Тип данных	Значение
+fi              global_         		002	function	number		0
+x               fi              		005	parameter	number		0
+y               fi              		008	parameter	number		0
+z               fi              		013	variable	number		0
+fs              global_         		031	function	string		[0]
+a               fs              		034	parameter	string		[0]
+b               fs              		037	parameter	string		[0]
+c               fs              		042	variable	string		[0]
+substr          fs              		047	function	string		[0]
+q               fs              		050	parameter	string		[0]
+p               fs              		053	parameter	number		0
+n               fs              		056	parameter	number		0
+lit_0           fs              		065	literal		number		1
+lit_1           fs              		067	literal		number		3
+x               main            		080	variable	number		0
+y               main            		084	variable	number		0
+z               main            		088	variable	number		0
+ub              main            		092	variable	ubyte		0
+b               main            		096	variable	bool		false
+lit_2           main            		098	literal		bool		true
+sa              main            		102	variable	string		[0]
+sb              main            		106	variable	string		[0]
+sc              main            		110	variable	string		[0]
+strlen          main            		115	function	number		0
+p               main            		118	parameter	string		[0]
+lit_3           main            		123	literal		number		3
+lit_4           main            		127	literal		number		5
+lit_5           main            		131	literal		string		[10]1234567890
+lit_6           main            		135	literal		string		[10]1234567890
+lit_7           main            		156	literal		string		[20]контрольный   пример
+lit_8           main            		168	literal		number		0

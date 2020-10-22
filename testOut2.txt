@@ -1,0 +1,3 @@
+main main|
+declare var;|
+} {|
