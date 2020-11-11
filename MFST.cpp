@@ -21,10 +21,11 @@ namespace MFST
 
 	Mfst::Mfst() : lenta(0), lenta_size(0), lenta_position(0) {}
 
-	Mfst::Mfst(LT::LexTable& plex, GRB::Greibach pgreibach) 
+	Mfst::Mfst(LT::LexTable& plex, GRB::Greibach pgreibach, bool debug) 
 	{
 		greibach = pgreibach;
 		lex = plex;
+		debug_mode = debug;
 		lenta = new short[lenta_size = lex.Size()];
 		for (int k = 0; k < lenta_size; k++)
 			lenta[k] = TS(lex.GetEntry(k).lexema);
@@ -130,6 +131,7 @@ namespace MFST
 
 	bool Mfst::start()
 	{
+		MFST_TRACE_START
 		bool rc = false;
 		RC_STEP rc_step = SURPRISE;
 		char buf[MFST_DIAGN_MAXSIZE];
@@ -142,7 +144,6 @@ namespace MFST
 		{
 		case MFST::Mfst::NS_NORULE:
 			MFST_TRACE4("----->NS_NORULE")
-			std::cout << "--------------------------------------------------------------------------------------------" << std::endl;
 			std::cout << getDiagnosis(0, buf) << std::endl;
 			std::cout << getDiagnosis(1, buf) << std::endl;
 			std::cout << getDiagnosis(2, buf) << std::endl;
@@ -155,8 +156,10 @@ namespace MFST
 			break;
 		case MFST::Mfst::LENTA_END:
 			MFST_TRACE4("----->LENTA_END")
-			std::cout << "---------------------------------------------------------------------------------------------" << std::endl;
-			std::cout << std::setw(4) << std::left << "0: всего строк всего строк в таблице лексем " << lenta_size << ", синтаксический анализ выполнен без ошибок" << std::endl;
+			if (debug_mode) {
+				std::cout << "---------------------------------------------------------------------------------------------" << std::endl;
+				std::cout << std::setw(4) << std::left << "0: всего строк всего строк в таблице лексем " << lenta_size << ", синтаксический анализ выполнен без ошибок" << std::endl;
+			}
 			rc = true;
 			break;
 		case MFST::Mfst::SURPRISE:

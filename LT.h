@@ -24,6 +24,9 @@
 #define LEX_DEF			'd'
 #define LEX_RETURN		'r'
 #define LEX_PRINT		'p'
+#define LEX_IF		    '?'
+#define LEX_ELIF	    'o'
+#define LEX_ELSE	    'e'
 #define LEX_ASSIGN		'='
 #define LEX_SEMICOLON	';'
 #define LEX_COMMA		','
@@ -43,13 +46,18 @@
 #define LEX_MOREEQUAL	'c'
 #define LEX_EQUAL		'c'
 #define LEX_NOTEQUAL	'c'
+#define LEX_AND			'b'
+#define LEX_OR			'b'
+#define LEX_INV			'~'
+#define LEX_BYTEOP		'b'
 #define LEX_QUOTE       '\''
 #define LEX_LEFTBRACKET  '['
 #define LEX_RIGHTBRACKET '['
 #define LEX_PAD			'_'
 #define LEX_FUNC_CALL	'@'
-#define LEX_COUNT		31
+#define LEX_COUNT		37
 #define LEX_GLOBAL		"global_"
+#define LEX_MAIN_SPACE	"main"
 
 namespace LT // таблица лексем
 {
@@ -74,7 +82,6 @@ namespace LT // таблица лексем
 		std::vector<std::string> SeparateLexems(std::string& line);												 // разделение элементов языка
 		int AddId(IT::IdTable& ID, std::string& input, IT::IDDATATYPE& iddatatype, IT::IDTYPE& idtype, int idx, std::string& space_name); // добавление элемента в таблицу идентификаторрв
 		int AddLit(IT::IdTable& ID, int& lit_count, int idx, int value, std::string& space_name, IT::IDDATATYPE iddatatype, std::string data);
-
 		int LexDefinition(std::string input);																	 // производит анализ входной цепочки, возвращает номер элемента в таблице avail_lexems, если элемента нет возвращает -1
 		bool PolishNotation(IT::IdTable& ID, int lt_pos, int& func_call_count);									 // построение польской записи для выражения
 		int Size() const;
@@ -95,10 +102,10 @@ namespace LT // таблица лексем
 		Entry* table = nullptr; // массив строка таблицы лексем
 
 		const char avail_lexems[LEX_COUNT] = {
-			LEX_NUMBER, LEX_STRING, LEX_UBYTE, LEX_BOOL, LEX_DEF, LEX_MAIN, LEX_FUNCTION, LEX_RETURN, LEX_PRINT,
+			LEX_NUMBER, LEX_STRING, LEX_UBYTE, LEX_BOOL, LEX_DEF, LEX_MAIN, LEX_FUNCTION, LEX_RETURN, LEX_PRINT, LEX_IF, LEX_ELIF, LEX_ELSE,
 			LEX_LEFTBRACE, LEX_BRACELET, LEX_LEFTHESIS, LEX_RIGHTHESIS, LEX_ASSIGN, LEX_COMMA  ,
 			LEX_SEMICOLON, LEX_PLUS, LEX_MINUS, LEX_STAR, LEX_DIRSLASH, LEX_LESS, LEX_MORE, LEX_LESSEQUAL, LEX_MOREEQUAL,
-			LEX_EQUAL, LEX_NOTEQUAL, LEX_TRUE, LEX_FALSE, LEX_LITERAL, LEX_DIG_LITERAL, LEX_ID
+			LEX_EQUAL, LEX_NOTEQUAL, LEX_AND, LEX_OR, LEX_INV, LEX_TRUE, LEX_FALSE, LEX_LITERAL, LEX_DIG_LITERAL, LEX_ID
 		};
 
 		const Fst::FST avail_lexems_FST[LEX_COUNT] = // Таблица возможных переходов
@@ -186,96 +193,133 @@ namespace LT // таблица лексем
 			Fst::NODE(1, Fst::RELATION('t', 5)),
 			Fst::NODE()
 		},
-		{ // 9. {
+		{ // 9. if
+			3,
+			Fst::NODE(1, Fst::RELATION('i', 1)),
+			Fst::NODE(1, Fst::RELATION('f', 2)),
+			Fst::NODE()
+		},
+		{ // 10. elif
+			5,
+			Fst::NODE(1, Fst::RELATION('e', 1)),
+			Fst::NODE(1, Fst::RELATION('l', 2)),
+			Fst::NODE(1, Fst::RELATION('i', 3)),
+			Fst::NODE(1, Fst::RELATION('f', 4)),
+			Fst::NODE()
+		},
+		{ // 11. else
+			5,
+			Fst::NODE(1, Fst::RELATION('e', 1)),
+			Fst::NODE(1, Fst::RELATION('l', 2)),
+			Fst::NODE(1, Fst::RELATION('s', 3)),
+			Fst::NODE(1, Fst::RELATION('e', 4)),
+			Fst::NODE()
+		},
+		{ // 12. {
 			2,
 			Fst::NODE(1,Fst::RELATION('{',1)),
 			Fst::NODE()
 		},
-		{ // 10. }
+		{ // 13. }
 			2,
 			Fst::NODE(1,Fst::RELATION('}',1)),
 			Fst::NODE()
 		},
-		{ // 11. (
+		{ // 14. (
 			2,
 			Fst::NODE(1,Fst::RELATION('(',1)),
 			Fst::NODE()
 		},
-		{ // 12. )
+		{ // 15. )
 			2,
 			Fst::NODE(1,Fst::RELATION(')',1)),
 			Fst::NODE()
 		},
-		{ // 13. =
+		{ // 16. =
 			2,
 			Fst::NODE(1,Fst::RELATION('=',1)),
 			Fst::NODE()
 		},
-		{ // 14. ,
+		{ // 17. ,
 			2,
 			Fst::NODE(1,Fst::RELATION(',',1)),
 			Fst::NODE()
 		},
-		{ // 15. ;
+		{ // 18. ;
 			2,
 			Fst::NODE(1,Fst::RELATION(';',1)),
 			Fst::NODE()
 		},
-		{ // 16. +
+		{ // 19. +
 			2,
 			Fst::NODE(1,Fst::RELATION('+',1)),
 			Fst::NODE()
 		},
-		{ // 17. -
+		{ // 20. -
 			2,
 			Fst::NODE(1,Fst::RELATION('-',1)),
 			Fst::NODE()
 		},
-		{ // 18. *
+		{ // 21. *
 			2,
 			Fst::NODE(1,Fst::RELATION('*',1)),
 			Fst::NODE()
 		},
-		{ // 19. /
+		{ // 22. /
 			2,
 			Fst::NODE(1,Fst::RELATION('/',1)),
 			Fst::NODE()
 		},
-		{ // 20. <
+		{ // 23. <
 			2,
 			Fst::NODE(1, Fst::RELATION('<', 1)),
 			Fst::NODE()
 		},
-		{ // 21. >
+		{ // 24. >
 			2,
 			Fst::NODE(1,Fst::RELATION('>',1)),
 			Fst::NODE()
 		},
-		{ // 22. <=
+		{ // 25. <=
 			3,
 			Fst::NODE(1, Fst::RELATION('<', 1)),
 			Fst::NODE(1, Fst::RELATION('=', 2)),
 			Fst::NODE()
 		},
-		{ // 23. >=
+		{ // 26. >=
 			3,
 			Fst::NODE(1, Fst::RELATION('>',1)),
 			Fst::NODE(1, Fst::RELATION('=', 2)),
 			Fst::NODE()
 		},
-		{ // 24. ==
+		{ // 27. ==
 			3,
 			Fst::NODE(1, Fst::RELATION('=', 1)),
 			Fst::NODE(1, Fst::RELATION('=', 2)),
 			Fst::NODE()
 		},
-		{ // 25. !=
+		{ // 28. !=
 			3,
 			Fst::NODE(1,Fst::RELATION('!',1)),
 			Fst::NODE(1,Fst::RELATION('=',2)),
 			Fst::NODE()
 		},
-		{ // 26. true (bool lit)
+		{ // 29. &
+		2,
+			Fst::NODE(1, Fst::RELATION('&', 1)),
+			Fst::NODE()
+		},
+		{ // 30. |
+			2,
+			Fst::NODE(1,Fst::RELATION('|',1)),
+			Fst::NODE()
+		},
+		{ // 31. ~
+			2,
+			Fst::NODE(1,Fst::RELATION('~',1)),
+			Fst::NODE()
+		},
+		{ // 32. true (bool lit)
 			5,
 			Fst::NODE(1, Fst::RELATION('t', 1)),
 			Fst::NODE(1, Fst::RELATION('r', 2)),
@@ -283,7 +327,7 @@ namespace LT // таблица лексем
 			Fst::NODE(1, Fst::RELATION('e', 4)),
 			Fst::NODE()
 		},
-		{ // 27. false (bool lit)
+		{ // 33. false (bool lit)
 			6,
 			Fst::NODE(1, Fst::RELATION('f', 1)),
 			Fst::NODE(1, Fst::RELATION('a', 2)),
@@ -292,19 +336,19 @@ namespace LT // таблица лексем
 			Fst::NODE(1, Fst::RELATION('e', 5)),
 			Fst::NODE()
 		},
-		{ // 28. string lit
+		{ // 34. string lit
 			4,
 			Fst::NODE(2, Fst::RELATION('\'', 1), Fst::RELATION('\'', 2)),
 			Fst::CreateNode({1,1,1,1,1,1}),
 			Fst::NODE(1, Fst::RELATION('\'', 3)),
 			Fst::NODE()
 		},
-		{ // 29. digital lit
+		{ // 35. digital lit
 			2,
 			Fst::CreateNode({0,0,0,0,1,0}),
 			Fst::NODE()
 		},
-		{ // 30. id
+		{ // 36. id
 			2,
 			Fst::CreateNode({1,1,0,0,0,0}),
 			Fst::NODE()
@@ -322,6 +366,9 @@ namespace LT // таблица лексем
 		lex_function,
 		lex_return,
 		lex_print,
+		lex_if,
+		lex_elif,
+		lex_else,
 		lex_leftbrace,
 		lex_bracelet,
 		lex_lefthesis,
@@ -339,6 +386,9 @@ namespace LT // таблица лексем
 		lex_moreequal,
 		lex_equal,
 		lex_notequal,
+		lex_and,
+		lex_or,
+		lex_inv,
 		lex_true_lit,
 		lex_false_lit,
 		lex_str_lit,
@@ -349,6 +399,4 @@ namespace LT // таблица лексем
 		lex_func_call,
 		lex_pad
 	};
-
-
 }

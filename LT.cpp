@@ -32,24 +32,20 @@ namespace LT
 		IT::IDTYPE nxt_id_type = IT::IDTYPE::N;
 		ifstream File(out_file);
 		string line, space_name;
-		int add_id_res = 0, lit_count = 0, func_call_count = 0, opened_leftbrace = 0;
-		char prev_symb = ' ';
+		int add_id_res = 0, lit_count = 0, func_call_count = 0, opened_leftbrace = 0;		
 		bool main_included = false;
 		queue<int> lt_pos;
 		while (getline(File, line))
 		{
 			vector<string> lexems = SeparateLexems(line);
 			col = 1;
-
 			for (string& lexem : lexems)
 			{
 				if (lexem == "\n") continue;
 				int symbol_code = LexDefinition(lexem);
-
-				if (symbol_code < 0) {
-					errors.push(ERROR_THROW_IN(120, row, col));
-				}
-				else {
+				if (symbol_code < 0) errors.push(ERROR_THROW_IN(120, row, col)); 
+				else 
+				{
 					LT::Entry entry;
 					//entry.idxTI = LT_TI_NULLIDX;
 					switch (symbol_code)
@@ -73,7 +69,7 @@ namespace LT
 						nxt_id_type = IT::IDTYPE::V;
 						break;
 					case lex_main:
-						space_name = "main";
+						space_name = LEX_MAIN_SPACE;
 						if (!main_included) main_included = true;
 						else errors.push(ERROR_THROW_IN(200, row, col));
 						break;
@@ -114,12 +110,12 @@ namespace LT
 						break;
 					default: break;
 					}
-					if (prev_symb == avail_lexems[symbol_code] && prev_symb != LEX_LEFTHESIS && prev_symb != LEX_RIGHTHESIS) errors.push(ERROR_THROW_IN(203, row, col));
+					
 					entry.lexema = avail_lexems[symbol_code];
 					entry.sn = row;
 					if (symbol_code != lex_id && symbol_code != lex_str_lit && symbol_code != lex_dig_lit && symbol_code != lex_true_lit && symbol_code!= lex_false_lit) entry.idxLex = symbol_code;
 					Add(entry);
-					prev_symb = avail_lexems[symbol_code];
+	
 				}
 				col++;
 			}
@@ -161,7 +157,12 @@ namespace LT
 				{
 					if (!lexem.empty()) res.push_back(lexem);
 					string s; s = line[i];
-					res.push_back(s);
+					if (line[i + 1] == LEX_ASSIGN) {
+						s += '=';
+						res.push_back(s);
+						i++;
+					}
+					else res.push_back(s);
 					lexem = "";
 				}
 				else {

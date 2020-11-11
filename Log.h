@@ -16,7 +16,7 @@ namespace Log
 	class LOG {
 	public:
 		LOG(); 
-		LOG(wchar_t* logfile);
+		LOG(Parm::PARM& parm);
 		void WriteLine(const char* c, ...);
 		void WriteLine(const wchar_t* c, ...);
 		void WriteLog(); // вывести в протокол заголовок
@@ -31,5 +31,6 @@ namespace Log
 	private:
 		wchar_t logfile[PARM_MAX_SIZE];
 		std::ofstream* stream;
+		bool debug_mode = false;
 	};
 }

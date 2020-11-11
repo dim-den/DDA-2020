@@ -1,38 +1,53 @@
-number function fi(number x,number y)|
-{|
-def number z;|
-z=x*(x+y);|
-return z;|
-}|
-|
-string function fs(string a,string b)|
-{|
-|
-def string c;|
-def string function substr(string q,number p,number n);|
-c=substr(a,1,3)+b;|
-return c;|
-}|
-|
-main|
-{|
-def number x;|
-def number y;|
-def number z;|
-def ubyte ub;|
-def bool b=true;|
-def string sa;|
-def string sb;|
-def string sc;|
-def number function strlen(string p);|
-x=3;|
-y=5;|
-sa='1234567890';|
-sb='1234567890';|
-z=fi(x,y);|
-sc=fs(sa,sb);|
-print 'контрольный   пример';|
-print sc;|
-print strlen(sc);|
-return 0;|
-}|
+number function fi(number x,number y)/
+{/
+def number z;/
+if(x+11>=y)/
+{/
+z=x*(x+y);/
+}/
+elif(x<=y)/
+{/
+z=x|y;/
+}/
+elif(x)/
+{/
+z=x&y;/
+}/
+else/
+{/
+z=~y;/
+}/
+return z;/
+}/
+/
+bool function IsRoot(ubyte i,ubyte j)/
+{/
+if(j==i*i)/
+{/
+return true;/
+}/
+return false;/
+}/
+/
+main/
+{/
+def number x=10;/
+def string sa='hey there';/
+def string sb;/
+if(strcopy(sa,sb))/
+{/
+print 'успешное копирование';/
+}/
+else/
+{/
+print 'скопировать строку не удалось';/
+}/
+def string sc=strconcat(sb,' you are welcome');/
+def ubyte ua=12;/
+def ubyte ub=34;/
+def bool b=IsRoot(ua,ub);/
+def number z=fi(x,11);/
+print sc;/
+print z;/
+return 0;/
+}/

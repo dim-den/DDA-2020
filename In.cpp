@@ -9,7 +9,6 @@ namespace In
 {
 	IN getin(wchar_t* infile)
 	{
-		ofstream out("test.txt");
 		ifstream File(infile);
 		if (!File.is_open()) throw ERROR_THROW(110);
 		unsigned char* text = new unsigned char[IN_MAX_LEN_TEXT], ch;

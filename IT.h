@@ -10,6 +10,7 @@
 #define TI_BOOL_DEFAULT		0x00
 #define TI_NULLIDX			0xfffffff
 #define TI_STR_MAXSIZE		255
+#define TI_LIBRARYSIZE		2
 
 namespace IT // таблица идентификаторов
 {

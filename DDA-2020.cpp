@@ -20,13 +20,13 @@ using namespace std;
 int _tmain(int argc, wchar_t* argv[])
 {
 	setlocale(LC_ALL, "Russian");
-	auto now = chrono::steady_clock::now();
+	auto start = chrono::steady_clock::now();
 	//Tests::TestProgramm();
 	Log::LOG log;
 	try
 	{
 		Parm::PARM parm = Parm::getparm(argc, argv);
-		log = Log::LOG(parm.log);
+		log = Log::LOG(parm);
 		log.WriteLine("Тест: ", "без ошибок", "");
 		log.WriteLog();
 		log.WriteParm(parm);
@@ -40,28 +40,34 @@ int _tmain(int argc, wchar_t* argv[])
 		IT::IdTable ID(in.lexems);
 		LT::LexTable LT(in.lexems);
 
-		LT.LexAnalysis(parm.out, ID);		
+		LT.LexAnalysis(parm.out, ID);
 
 		log.WriteLexTable(LT);
 		log.WriteIdTable(ID);
 
-		MFST_TRACE_START
-			MFST::Mfst mfst(LT, GRB::getGreibach());
+		MFST::Mfst mfst(LT, GRB::getGreibach(), parm.debug);
 
 		mfst.start();
 		mfst.savededucation();
 		mfst.printrules();
-		
-		
+
+		cout << "-------------------------------------------------------------------------------\n";
+		cout << "Программа завершена успешно!" << endl;
+		cout << "Время выполнения: " << chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - start).count() << "мс\n";
+		return 1;
 	}
 	catch (Error::ERROR error)
 	{
 		log.WriteError(error);
+		cout << "-------------------------------------------------------------------------------" << endl;
+		cout << "Ошибка... Выход из программы" << endl;
 	}
 	catch (queue<Error::ERROR>& errors)
 	{
 		log.WriteErrors(errors);
+		cout << "-------------------------------------------------------------------------------" << endl;
+		cout << "Ошибка... Выход из программы" << endl;
 	}
-	cout << chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - now).count();
+	return 0;
 }
 	

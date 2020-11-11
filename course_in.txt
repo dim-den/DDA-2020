@@ -1,0 +1,78 @@
+bool function CheckAddress(string address)
+{
+	number octets = 0;
+	number numbers = 0;
+	ubyte address_size = strlen(address);
+	string buff;
+	foreach ubyte i in [0, address_size] step i++
+	{
+		if(address[i] <= '9' and address[i] >= '0')
+		{
+			if(numbers>3) => return false;
+			buff[numbers++] = address[i];
+		}
+		elif(address[i] == '.' or i == address_size)
+		{
+			if(ToNumber(buff) > 255 or numbers == 0) => return false;
+			numbers = 0;
+			octets++;
+			buff = "";
+		}
+		else => return false;
+	} 
+	if(octets != 4) => return false;
+	return true;
+}
+
+bool function CheckMask(string mask)
+{
+	number octets = 0;
+	number numbers = 0;
+	number numb = 0;
+	number prev_number = 256;
+	ubyte mask_size = strlen(mask);
+	string buff;
+	foreach ubyte i in [0, mask_size] step i++
+	{
+		if(address[i] <= '9' and address[i] >= '0')
+		{
+			if(numbers>3) => return false;
+			buff[numbers++] = address[i];
+		}
+		elif(address[i] == '.' or i == mask_size)
+		{
+			numb = ToNumber(buff);
+			if(numb > 255) => return false;
+			elif (prev_number < 255 && numb != 0) => return false;
+			elif (octets == 0 && number == 0) => return false;
+			elif (!(numb == 0 || numb == 128 || numb == 192 || numb == 224 || numb == 240 || numb == 248 || numb == 252 || numb == 254 || numb == 255)) => return false;
+			prev_number = numb;
+			numbers = 0;
+			octets++;
+			buff = "";
+		}
+		else => return false;
+	} 
+	if(octets != 4) => return false;
+	return true;
+}
+
+main
+{
+	string ip;
+	ip = getline();
+	if(!CheckAddress(ip))
+	{
+		print("Введен неверный ip-адрес. Выход из программы.");
+		return -1;
+	}
+	string mask;
+	mask = getline();
+	if(!CheckMask(ip))
+	{
+		print("Введена неверная маска сети. Выход из программы.");
+		return -2;
+	}
+	print("Введены верные данные сети!");
+	
+}

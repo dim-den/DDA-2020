@@ -2,17 +2,20 @@
 
 namespace Parm
 {
-	PARM getparm(int argc, wchar_t* argv[]) {
+	PARM getparm(int argc, wchar_t* argv[])
+	{
+		PARM parm;
 
-		int posIN = 0, posOUT = 0, posLOG = 0;
+		int posIN = 0, posOUT = 0, posLOG = 0, posDEBUG = 0;
 		for (int i = 1; i < argc;i++) {
 			if (wcsstr(argv[i], PARM_IN) != NULL) posIN = i;
 			else if (wcsstr(argv[i], PARM_OUT) != NULL) posOUT = i;
 			else if (wcsstr(argv[i], PARM_LOG) != NULL) posLOG = i;
+			else if (wcsstr(argv[i], PARM_DEBUG) != NULL) parm.debug = true;
 		}
 
 		if (!posIN) throw ERROR_THROW(100);
-		PARM parm;
+		
 		wcscpy_s(parm.in, setparm(argv[posIN], wcslen(PARM_IN)));
 
 		if (!posOUT) wcscpy_s(parm.out, setparm(parm.in, (wchar_t*)PARM_OUT_DEFAULT_EXT));
@@ -20,7 +23,7 @@ namespace Parm
 
 		if (!posLOG) wcscpy_s(parm.log, setparm(parm.in, (wchar_t*)PARM_LOG_DEFAULT_EXT));
 		else wcscpy_s(parm.log, setparm(argv[posLOG], wcslen(PARM_LOG)));
-		
+				
 		return parm;
 	}
 
