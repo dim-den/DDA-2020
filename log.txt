@@ -1,13 +1,13 @@
 Тест: без ошибок
 
  ------ ПРОТОКОЛ ------
- Дата: 11.11.20 14:48:01 
+ Дата: 16.11.20 22:59:08 
 
  ------ Параметры ------ 
 -log: log.txt
 -out: out.txt
 -in:  in.txt-
--debug: 0
+-debug: 1
 
  ------ Таблица лексем ------ 
 
@@ -66,32 +66,32 @@
  		------ Таблица идентификаторов ------ 
 
 Имя             Область видимости	Индекс	Тип		Тип данных	Значение
-strconcat       global_         	   -1	function	string		[0]
-strcopy         global_         	   -2	function	bool		false
-fi              global_         	00002	function	number		0
-x               fi              	00005	parameter	number		0
-y               fi              	00008	parameter	number		0
-z               fi              	00013	variable	number		0
-lit_0           fi              	00019	literal		number		11
-IsRoot          global_         	00075	function	bool		false
-i               IsRoot          	00078	parameter	ubyte		0
-j               IsRoot          	00081	parameter	ubyte		0
-lit_1           IsRoot          	00094	literal		bool		true
-lit_2           IsRoot          	00098	literal		bool		false
-x               main            	00105	variable	number		0
-lit_3           main            	00107	literal		number		10
-sa              main            	00111	variable	string		[0]
-lit_4           main            	00113	literal		string		[9]hey there
-sb              main            	00117	variable	string		[0]
-lit_5           main            	00130	literal		string		[20]успешное копирование
-lit_6           main            	00136	literal		string		[29]скопировать строку не удалось
-sc              main            	00141	variable	string		[0]
-lit_7           main            	00147	literal		string		[16] you are welcome
-ua              main            	00152	variable	ubyte		0
-lit_8           main            	00154	literal		number		12
-ub              main            	00158	variable	ubyte		0
-lit_9           main            	00160	literal		number		34
-b               main            	00164	variable	bool		false
-z               main            	00175	variable	number		0
-lit_10          main            	00181	literal		number		11
-lit_11          main            	00191	literal		number		0
+strconcat       global_         	4096	function	string		[0]
+strcopy         global_         	4097	function	bool		false
+fi              global_         	0002	function	number		0
+x               fi              	0005	parameter	number		0
+y               fi              	0008	parameter	number		0
+z               fi              	0013	variable	number		0
+lit_0           fi              	0019	literal		number		11
+IsRoot          global_         	0075	function	bool		false
+i               IsRoot          	0078	parameter	ubyte		0
+j               IsRoot          	0081	parameter	ubyte		0
+lit_1           IsRoot          	0094	literal		bool		true
+lit_2           IsRoot          	0098	literal		bool		false
+x               main            	0105	variable	number		0
+lit_3           main            	0107	literal		number		33
+sa              main            	0111	variable	string		[0]
+lit_4           main            	0113	literal		string		[9]hey there
+sb              main            	0117	variable	string		[0]
+lit_5           main            	0130	literal		string		[20]успешное копирование
+lit_6           main            	0136	literal		string		[29]скопировать строку не удалось
+sc              main            	0141	variable	string		[0]
+lit_7           main            	0147	literal		string		[16] you are welcome
+ua              main            	0152	variable	ubyte		0
+lit_8           main            	0154	literal		number		12
+ub              main            	0158	variable	ubyte		0
+lit_9           main            	0160	literal		number		34
+b               main            	0164	variable	bool		false
+z               main            	0175	variable	number		0
+lit_10          main            	0181	literal		number		11
+lit_11          main            	0191	literal		number		0

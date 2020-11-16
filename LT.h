@@ -77,7 +77,7 @@ namespace LT // таблица лексем
 		LexTable() : maxsize(LT_MAXSIZE), size(0) {}
 		LexTable(int size);
 		void Add(Entry entry);
-		Entry& GetEntry(int n);
+		Entry& GetEntry(int n) const;
 		void LexAnalysis(wchar_t* out_file, IT::IdTable& ID);													 // обработка входного файлаа и создание таблицы лексем и идентификаторов
 		std::vector<std::string> SeparateLexems(std::string& line);												 // разделение элементов языка
 		int AddId(IT::IdTable& ID, std::string& input, IT::IDDATATYPE& iddatatype, IT::IDTYPE& idtype, int idx, std::string& space_name); // добавление элемента в таблицу идентификаторрв
@@ -85,6 +85,7 @@ namespace LT // таблица лексем
 		int LexDefinition(std::string input);																	 // производит анализ входной цепочки, возвращает номер элемента в таблице avail_lexems, если элемента нет возвращает -1
 		bool PolishNotation(IT::IdTable& ID, int lt_pos, int& func_call_count);									 // построение польской записи для выражения
 		int Size() const;
+		std::vector<int> GetFuncCallPos() const;
 		void operator=(const LexTable& rhs) {
 			maxsize = rhs.maxsize;
 			size = rhs.size;
@@ -94,12 +95,13 @@ namespace LT // таблица лексем
 		}
 		void InsertTable(int pos, int lenght, int sn, LT::LexTable& LT);
 		~LexTable();
-
+		
 	private:
 		int maxsize;
-		//IT::IdTable& ID;
 		int size;
 		Entry* table = nullptr; // массив строка таблицы лексем
+
+		std::vector<int> func_call_pos;
 
 		const char avail_lexems[LEX_COUNT] = {
 			LEX_NUMBER, LEX_STRING, LEX_UBYTE, LEX_BOOL, LEX_DEF, LEX_MAIN, LEX_FUNCTION, LEX_RETURN, LEX_PRINT, LEX_IF, LEX_ELIF, LEX_ELSE,

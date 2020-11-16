@@ -163,6 +163,7 @@
     <ClCompile Include="LT.cpp" />
     <ClCompile Include="MFST.cpp" />
     <ClCompile Include="Parm.cpp" />
+    <ClCompile Include="Semantic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Error.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="LT.h" />
     <ClInclude Include="MFST.h" />
     <ClInclude Include="Parm.h" />
+    <ClInclude Include="Semantic.h" />
     <ClInclude Include="Tests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -9,17 +9,43 @@ char rbuf[205], sbuf[205], lbuf[1024];
 
 namespace MFST
 {
-	MFST::MfstState::MfstState() : lenta_position(0), nrule(-1), nrulechain(-1) {}
+	MFST::MfstState::MfstState() : 
+		lenta_position(0),
+		nrule(-1), 
+		nrulechain(-1) 
+		{}
 
-	MfstState::MfstState(short pposition, MFSTSTSTACK pst, short pnrulechain) : lenta_position(pposition), st(pst), nrulechain(pnrulechain) {}
+	MfstState::MfstState(short pposition, MFSTSTSTACK pst, short pnrulechain) : 
+		lenta_position(pposition), 
+		st(pst), 
+		nrulechain(pnrulechain) 
+		{}
 
-	MfstState::MfstState(short pposition, MFSTSTSTACK pst, short pnrule, short pnrulechain) : lenta_position(pposition), st(pst), nrule(pnrule), nrulechain(pnrulechain) {}
+	MfstState::MfstState(short pposition, MFSTSTSTACK pst, short pnrule, short pnrulechain) : 
+		lenta_position(pposition), 
+		st(pst), 
+		nrule(pnrule), 
+		nrulechain(pnrulechain) 
+		{}
 
-	Mfst::MfstDiagnosis::MfstDiagnosis() : lenta_position(-1), rc_step(SURPRISE), nrule(-1), nrule_chain(-1) {}
+	Mfst::MfstDiagnosis::MfstDiagnosis() : lenta_position(-1), 
+		rc_step(SURPRISE),
+		nrule(-1), 
+		nrule_chain(-1) 
+		{}
 
-	Mfst::MfstDiagnosis::MfstDiagnosis(short plenta_position, RC_STEP prc_step, short pnrule, short pnrule_chain) : lenta_position(plenta_position), rc_step(prc_step), nrule(pnrule), nrule_chain(pnrule_chain) {}
+	Mfst::MfstDiagnosis::MfstDiagnosis(short plenta_position, RC_STEP prc_step, short pnrule, short pnrule_chain) : 
+		lenta_position(plenta_position), 
+		rc_step(prc_step), 
+		nrule(pnrule), 
+		nrule_chain(pnrule_chain) 
+		{}
 
-	Mfst::Mfst() : lenta(0), lenta_size(0), lenta_position(0) {}
+	Mfst::Mfst() : 
+		lenta(0), 
+		lenta_size(0), 
+		lenta_position(0)
+		{}
 
 	Mfst::Mfst(LT::LexTable& plex, GRB::Greibach pgreibach, bool debug) 
 	{

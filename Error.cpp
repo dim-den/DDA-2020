@@ -40,11 +40,14 @@ namespace Error
 	ERROR_ENTRY_NODEF10(160), ERROR_ENTRY_NODEF10(170), ERROR_ENTRY_NODEF10(180), ERROR_ENTRY_NODEF10(190),
 	ERROR_ENTRY(200,"Функция main должна быть уникальна"), 
 	ERROR_ENTRY(201,"Отсутствует функция main"), 
-	ERROR_ENTRY(202,"Ошибка объявления идентификатора"), 
+	ERROR_ENTRY(202,"Использование необъявленного идентификатора"), 
 	ERROR_ENTRY(203,"Неверная последовательность лексем"),
 	ERROR_ENTRY(204,"Идентификатор с таким именем уже задан в этой области видимости"),
 	ERROR_ENTRY(205,"Недопустимо объявление переменной в глобальной области"), 
-	ERROR_ENTRY_NODEF(206), ERROR_ENTRY_NODEF(207), ERROR_ENTRY_NODEF(208), ERROR_ENTRY_NODEF(209),
+	ERROR_ENTRY(206,"Имя функции не может совпадать с именем функции стандартной библиотеки"), 
+	ERROR_ENTRY(207,"Неверное количество параметров у вызываемой функции"),
+	ERROR_ENTRY(208,"Неверный тип параметра у вызываемой функции"), 
+	ERROR_ENTRY_NODEF(209),
 	ERROR_ENTRY_NODEF10(210),ERROR_ENTRY_NODEF10(220),ERROR_ENTRY_NODEF10(230),ERROR_ENTRY_NODEF10(240),ERROR_ENTRY_NODEF10(250),
 	ERROR_ENTRY_NODEF10(260),ERROR_ENTRY_NODEF10(270),ERROR_ENTRY_NODEF10(280),ERROR_ENTRY_NODEF10(290),
 	ERROR_ENTRY_NODEF100(300), ERROR_ENTRY_NODEF100(400), ERROR_ENTRY_NODEF100(500),
@@ -65,6 +68,16 @@ namespace Error
 		ERROR err;
 		if (id < 0 || id >= ERROR_MAX_ENTRY) err = errors[0];
 		else err = errors[id];
+		return err;
+	}
+
+	ERROR geterrorl(int id, int line = -1)
+	{
+		ERROR err;
+		if (id < 0 || id >= ERROR_MAX_ENTRY) id = 0;
+		err.id = id;
+		strcpy_s(err.message, errors[id].message);
+		err.inext = { line, -1 };
 		return err;
 	}
 

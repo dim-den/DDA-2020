@@ -81,18 +81,21 @@ namespace Log
 	}
 
 	void LOG::WriteError(const Error::ERROR& error) { // вывести информацию об ошибке
+		bool copy = debug_mode;
+		debug_mode = true;
 		if (stream != nullptr) {
 			output(endl);
-			if (100 <= error.id && error.id <= 109) * stream << "PARM.";
-			else if (110 <= error.id && error.id <= 119) * stream << "IN.";
-			else if (120 <= error.id && error.id <= 139) * stream << "LEX.";
-			else if (200 <= error.id && error.id <= 299) * stream << "SEM.";
-			else if (600 <= error.id && error.id <= 699) * stream << "SYN.";
+			if (100 <= error.id && error.id <= 109) output("PARM.");
+			else if (110 <= error.id && error.id <= 119) output("IN.");
+			else if (120 <= error.id && error.id <= 139) output("LEX.");
+			else if (200 <= error.id && error.id <= 299) output("SEM.");
+			else if (600 <= error.id && error.id <= 699) output("SYN.");
 			else output("SYST.");
 			output(error.id << ": " << error.message);
-			if (error.inext.line != -1 && error.inext.col != -1)
-				* stream << ", строка " << error.inext.line << ", позиция " << error.inext.col;
+			if (error.inext.line != -1) output(", строка " << error.inext.line);
+			if (error.inext.col != -1 ) output(", позиция " << error.inext.col);
 		}
+		debug_mode = copy;
 	}
 
 	void LOG::WriteLexTable(LT::LexTable& lextable)
@@ -121,8 +124,7 @@ namespace Log
 			output(setw(ID_MAXSIZE) << setfill(' ') << left << ent.id);
 			output(setw(ID_MAXSIZE) << setfill(' ') << left << ent.spacename << '\t');
 
-			if (ent.idxfirstLE < 0) * stream << setw(5) << setfill(' ') << right << ent.idxfirstLE << '\t';
-			else output(setw(5) << setfill('0') << right << ent.idxfirstLE << '\t');
+			 output(setw(4) << setfill('0') << right << ent.idxfirstLE << '\t');
 
 			switch (ent.idtype) {
 			case IT::IDTYPE::V:

@@ -9,17 +9,20 @@ namespace LT
 		table = new Entry[size];
 	}
 
-	void LexTable::Add(Entry entry) {
+	void LexTable::Add(Entry entry) 
+	{
 		if (size >= maxsize) throw ERROR_THROW(122);
 		table[size++] = entry;
 	}
 
-	Entry& LexTable::GetEntry(int n) {
+	Entry& LexTable::GetEntry(int n) const
+	{
 		if (n > size) throw ERROR_THROW(123);
 		return table[n];
 	}
 
-	LexTable::~LexTable() {
+	LexTable::~LexTable() 
+	{
 		if (table != nullptr) {
 			delete[] table;
 		}
@@ -106,6 +109,7 @@ namespace LT
 						if (add_id_res == -1) errors.push(ERROR_THROW_IN(202, row, col));
 						else if (add_id_res == -2) errors.push(ERROR_THROW_IN(204, row, col));
 						else if (add_id_res == -3) errors.push(ERROR_THROW_IN(205, row, col));
+						else if (add_id_res == -4) errors.push(ERROR_THROW_IN(206, row, col));
 						entry.idxTI = add_id_res;
 						break;
 					default: break;
@@ -184,10 +188,13 @@ namespace LT
 		strncpy_s(spacename, space_name.c_str(), ID_MAXSIZE - 1);
 		strncpy_s(id, input.c_str(), ID_MAXSIZE - 1);
 		int IsId = ID.IsId(id, spacename);
-		if (IsId == TI_NULLIDX) { // если id не существует
-			if (idtype == IT::IDTYPE::N || iddatatype == IT::IDDATATYPE::NONE) { // проверка на наличие в глобальной области (если это вызов функции)
-				IsId = ID.IsId(id, (char*)LEX_GLOBAL);
+		if (IsId == TI_NULLIDX) // если id не существует
+		{ 
+			if (idtype == IT::IDTYPE::N || iddatatype == IT::IDDATATYPE::NONE) // если не хватает данных
+			{
+				IsId = ID.IsId(id, (char*)LEX_GLOBAL); // проверка на наличие в глобальной области (если это вызов функции)
 				if (IsId == TI_NULLIDX)	return -1;
+				func_call_pos.push_back(idx);
 				return IsId;
 			}
 			if (idtype == IT::IDTYPE::V && std::strcmp(spacename, LEX_GLOBAL) == 0) return -3;
@@ -210,8 +217,13 @@ namespace LT
 			return ID.Add(ent);
 		}
 		if (idtype != IT::IDTYPE::N || iddatatype != IT::IDDATATYPE::NONE) { // идентификатор должен быть уникальным
-			idtype = IT::IDTYPE::N;
+			if (idtype == IT::IDTYPE::F) {
+				idtype = IT::IDTYPE::P;
+				if (space_name == LEX_GLOBAL) space_name = input;
+			}
+			else idtype = IT::IDTYPE::N;
 			iddatatype = IT::IDDATATYPE::NONE;
+			if (IsId < TI_LIBRARYSIZE) return -4;
 			return -2;
 		}
 		return IsId;
@@ -340,7 +352,11 @@ namespace LT
 
 		return true;
 	}
-
+	
+	std::vector<int> LexTable::GetFuncCallPos() const 
+	{
+		return func_call_pos;
+	}
 	void LexTable::InsertTable(int pos, int length, int sn, LT::LexTable& LT)
 	{
 		for (int i = 0; i < length + 1; i++) {

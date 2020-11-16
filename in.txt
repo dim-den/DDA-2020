@@ -31,7 +31,7 @@ bool function IsRoot(ubyte i, ubyte j)
 
 main 
 {
-	def number x = 10;
+	def number x = 33;
 	def string sa = 'hey there';  
 	def string sb;  
 	if(strcopy(sa, sb)) 
@@ -42,7 +42,7 @@ main
 	{ 
 		print 'скопировать строку не удалось'; 
 	}  
-	def string sc = strconcat(sb, ' you are welcome');
+	def string sc = strconcat(sa, ' you are welcome');
 	def ubyte ua = 12;
 	def ubyte ub = 34;
 	def bool b = IsRoot(ua, ub);  

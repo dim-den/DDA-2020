@@ -14,6 +14,7 @@ using namespace std;
 #include "FST.h"
 #include "MFST.h"
 #include "GRB.h"
+#include "Semantic.h"
 #include "Tests.h"
 
 #include <chrono>
@@ -21,6 +22,7 @@ int _tmain(int argc, wchar_t* argv[])
 {
 	setlocale(LC_ALL, "Russian");
 	auto start = chrono::steady_clock::now();
+	//std::ios::sync_with_stdio(false);
 	//Tests::TestProgramm();
 	Log::LOG log;
 	try
@@ -37,19 +39,22 @@ int _tmain(int argc, wchar_t* argv[])
 		out << in.text;
 		out.close();
 
-		IT::IdTable ID(in.lexems);
+		IT::IdTable IT(in.lexems);
 		LT::LexTable LT(in.lexems);
 
-		LT.LexAnalysis(parm.out, ID);
+		LT.LexAnalysis(parm.out, IT);
 
 		log.WriteLexTable(LT);
-		log.WriteIdTable(ID);
+		log.WriteIdTable(IT);
 
 		MFST::Mfst mfst(LT, GRB::getGreibach(), parm.debug);
 
 		mfst.start();
 		mfst.savededucation();
 		mfst.printrules();
+
+		SEM::Semantic semantic(LT, IT);
+		semantic.Analysis();
 
 		cout << "-------------------------------------------------------------------------------\n";
 		cout << "Программа завершена успешно!" << endl;
@@ -59,15 +64,13 @@ int _tmain(int argc, wchar_t* argv[])
 	catch (Error::ERROR error)
 	{
 		log.WriteError(error);
-		cout << "-------------------------------------------------------------------------------" << endl;
-		cout << "Ошибка... Выход из программы" << endl;
 	}
 	catch (queue<Error::ERROR>& errors)
 	{
-		log.WriteErrors(errors);
-		cout << "-------------------------------------------------------------------------------" << endl;
-		cout << "Ошибка... Выход из программы" << endl;
+		log.WriteErrors(errors);		
 	}
+	cout << "\n-------------------------------------------------------------------------------" << endl;
+	cout << "Ошибка... Выход из программы" << endl;
 	return 0;
 }
 	

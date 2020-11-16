@@ -1,5 +1,6 @@
 #pragma once
 #include <cstring>
+#include <vector>
 #include "Error.h"
 
 #define ID_MAXSIZE			16
@@ -52,7 +53,13 @@ namespace IT // таблица идентификаторов
 		} value;					// значение идентификатора
 	};
 
+	struct STDLib
+	{
+		Entry entry;					// данные о функции для таблицы идентификатора
+		std::vector<IDDATATYPE> params; // параметры функции
+	};
 
+	STDLib* GetSTDLib();
 
 	class IdTable
 	{
@@ -60,8 +67,8 @@ namespace IT // таблица идентификаторов
 		IdTable() : maxsize(TI_MAXSIZE), size(0) {}
 		IdTable(int size);
 		int Add(Entry entry);
-		Entry& GetEntry(int n);
-		int IsId(char id[ID_MAXSIZE], char spacename[ID_MAXSIZE]);
+		Entry& GetEntry(int n) const;
+		int IsId(char id[ID_MAXSIZE], char spacename[ID_MAXSIZE]) const;
 		int Size() const;
 		~IdTable();
 
