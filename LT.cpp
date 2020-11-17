@@ -37,7 +37,6 @@ namespace LT
 		string line, space_name;
 		int add_id_res = 0, lit_count = 0, func_call_count = 0, opened_leftbrace = 0;		
 		bool main_included = false;
-		queue<int> lt_pos;
 		while (getline(File, line))
 		{
 			vector<string> lexems = SeparateLexems(line);
@@ -54,7 +53,7 @@ namespace LT
 					switch (symbol_code)
 					{
 					case lex_assign:
-						lt_pos.push(size + 1);
+						assign_pos.push_back(size + 1);
 						break;
 					case lex_number:
 						nxt_id_datatype = IT::IDDATATYPE::NUMB;
@@ -72,9 +71,14 @@ namespace LT
 						nxt_id_type = IT::IDTYPE::V;
 						break;
 					case lex_main:
-						space_name = LEX_MAIN_SPACE;
-						if (!main_included) main_included = true;
+						if (!main_included)
+						{
+							main_included = true;
+							nxt_id_datatype = IT::IDDATATYPE::NUMB; nxt_id_type = IT::IDTYPE::F;
+							add_id_res = AddId(ID, lexem, nxt_id_datatype, nxt_id_type, size, space_name);
+						}
 						else errors.push(ERROR_THROW_IN(200, row, col));
+						space_name = LEX_MAIN_SPACE;
 						break;
 					case lex_function:
 						nxt_id_type = IT::IDTYPE::F;
@@ -91,9 +95,11 @@ namespace LT
 						break;
 					case lex_true_lit:
 						add_id_res = AddLit(ID, lit_count, size, 1, space_name, IT::IDDATATYPE::BOOL, "");
+						entry.idxTI = add_id_res;
 						break;
 					case lex_false_lit:
 						add_id_res = AddLit(ID, lit_count, size, 0, space_name, IT::IDDATATYPE::BOOL , "");
+						entry.idxTI = add_id_res;
 						break;
 					case lex_str_lit:
 						add_id_res = AddLit(ID, lit_count, size, lexem.length(), space_name, IT::IDDATATYPE::STR, lexem);
@@ -125,11 +131,7 @@ namespace LT
 			}
 			row++;
 		}
-		if (!main_included) errors.push(ERROR_THROW(201));
-		//while(!lt_pos.empty()) {
-		// if (!PolishNotation(ID, lt_pos.front(), func_call_count)) errors.push(ERROR_THROW_IN(128, table[pos].sn, 3));
-		// lt_pos.pop();
-		// }				
+		if (!main_included) errors.push(ERROR_THROW(201));			
 		if (!errors.empty()) throw errors;
 	}
 
@@ -270,6 +272,9 @@ namespace LT
 			{lex_plus,			2},
 			{lex_star,			3},
 			{lex_dirslash,		3},
+			{lex_and,			3},
+			{lex_or,			3},
+			{lex_inv,			3},
 			{lex_leftbracket,	4},
 			{lex_rightbracket,	4},
 		};
@@ -279,16 +284,17 @@ namespace LT
 		LT::Entry entry = table[lt_pos];
 		int length = 0;
 		while (table[lt_pos + length].lexema != LEX_SEMICOLON) length++;
-		LT::LexTable expr(length);
 
-		int sn = entry.sn;
+		int sn = entry.sn, size = lt_pos;
 		for (int i = lt_pos; entry.lexema != LEX_SEMICOLON; i++, entry = table[i])
 		{
 			switch (entry.lexema)
 			{
+			case LEX_INV: // ~
+			case LEX_BYTEOP:// & |
 			case LEX_ARIFMETIC: // + - * /
 				while (!operators.empty() && operators.top().lexema != LEX_LEFTBRACKET && oper_priority[entry.idxLex] <= oper_priority[operators.top().idxLex]) {
-					expr.Add(operators.top());
+					table[size++] = operators.top();
 					operators.pop();
 				}
 				operators.push(entry);
@@ -307,13 +313,13 @@ namespace LT
 						called_func.top().iddatatype = IT::IDDATATYPE::NUMB;
 						string name = called_func.top().id; name += '_' + to_string(func_call_count++);
 						strncpy_s(called_func.top().id, name.c_str(), ID_MAXSIZE - 1);
-						called_func.top().idxfirstLE = lt_pos + expr.size;
-						expr.Add({ LEX_FUNC_CALL, entry.sn, ID.Add(called_func.top()) });
+						called_func.top().idxfirstLE = size; 
+						table[size++] = { LEX_FUNC_CALL, entry.sn, ID.Add(called_func.top()) };
 						called_func.pop();
 						break;
 					}
 					else {
-						expr.Add(operators.top());
+						table[size++] = operators.top();
 						operators.pop();
 					}
 				}
@@ -325,15 +331,15 @@ namespace LT
 					called_func.push(ID.GetEntry(entry.idxTI));
 					called_func.top().value.vint = 0;
 				}
-				else expr.Add(entry);
+				else table[size++] = entry;
 				break;
 			case LEX_LITERAL:
-				expr.Add(entry);
+				table[size++] = entry;
 				break;
 			case LEX_COMMA:
 				if (called_func.top().value.vint == 0) called_func.top().value.vint = 1;
 				while (!operators.empty() && operators.top().lexema != LEX_LEFTBRACKET && operators.top().lexema != LEX_LEFTHESIS) {
-					expr.Add(operators.top());
+					table[size++] = operators.top();
 					operators.pop();
 				}
 				called_func.top().value.vint++;
@@ -344,28 +350,32 @@ namespace LT
 		}
 
 		while (!operators.empty()) {
-			expr.Add(operators.top());
+			table[size++] = operators.top();
 			operators.pop();
 		}
-
-		InsertTable(lt_pos, length, sn, expr);
+		for(int i = size; i < length + lt_pos; i++)
+			table[i] = { LEX_PAD , sn, LT::lexem_number::lex_pad };
 
 		return true;
 	}
 	
+	void LexTable::BuildPolish(IT::IdTable& ID)
+	{
+		int func_call_count = 0;
+		for (int pos : assign_pos)
+		{
+			if (!PolishNotation(ID, pos, func_call_count)) throw ERROR_THROW_L(128, table[pos].sn);
+		}
+	}
+
 	std::vector<int> LexTable::GetFuncCallPos() const 
 	{
 		return func_call_pos;
 	}
-	void LexTable::InsertTable(int pos, int length, int sn, LT::LexTable& LT)
+	
+	std::vector<int> LexTable::GetAssignPos() const 
 	{
-		for (int i = 0; i < length + 1; i++) {
-			if (i == LT.Size()) table[pos + i] = { LEX_SEMICOLON , sn, LT::lexem_number::lex_semicolon };
-			else if (i > LT.Size()) {
-				table[pos + i] = { LEX_PAD , sn, LT::lexem_number::lex_pad };
-			}
-			else table[pos + i] = LT.GetEntry(i);
-		}
+		return assign_pos;
 	}
 
 	int LexTable::Size() const {

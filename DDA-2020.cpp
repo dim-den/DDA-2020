@@ -54,7 +54,7 @@ int _tmain(int argc, wchar_t* argv[])
 		mfst.printrules();
 
 		SEM::Semantic semantic(LT, IT);
-		semantic.Analysis();
+		semantic.Analysis(parm);
 
 		cout << "-------------------------------------------------------------------------------\n";
 		cout << "Программа завершена успешно!" << endl;

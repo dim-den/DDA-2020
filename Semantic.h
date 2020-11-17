@@ -2,6 +2,7 @@
 #include "LT.h"
 #include "IT.h"
 #include "Error.h"
+#include "Parm.h"
 
 namespace SEM
 {
@@ -9,11 +10,14 @@ namespace SEM
 	{
 	public:
 		Semantic(LT::LexTable& LT, IT::IdTable& IT);
-		bool Analysis();
-		bool CheckParameters();
+		void Analysis(Parm::PARM p);
+		void CheckParameters();
+		void CheckExprTypes();
 	private:
+		std::queue <Error::ERROR> errors;
+		IT::IDDATATYPE GetExprType(int pos);
 		std::vector<IT::IDDATATYPE> GetExpectedParams(const LT::Entry& entry, const IT::Entry& it_entry);
-		const LT::LexTable& LexTable;
-		const IT::IdTable& IdTable;		
+		 LT::LexTable& LexTable;
+		 IT::IdTable& IdTable;		
 	};
 }

@@ -84,8 +84,10 @@ namespace LT // таблица лексем
 		int AddLit(IT::IdTable& ID, int& lit_count, int idx, int value, std::string& space_name, IT::IDDATATYPE iddatatype, std::string data);
 		int LexDefinition(std::string input);																	 // производит анализ входной цепочки, возвращает номер элемента в таблице avail_lexems, если элемента нет возвращает -1
 		bool PolishNotation(IT::IdTable& ID, int lt_pos, int& func_call_count);									 // построение польской записи для выражения
+		void BuildPolish(IT::IdTable& ID);
 		int Size() const;
 		std::vector<int> GetFuncCallPos() const;
+		std::vector<int> GetAssignPos() const;
 		void operator=(const LexTable& rhs) {
 			maxsize = rhs.maxsize;
 			size = rhs.size;
@@ -93,7 +95,6 @@ namespace LT // таблица лексем
 			for (int i = 0;i < size;i++)
 				table[i] = rhs.table[i];
 		}
-		void InsertTable(int pos, int lenght, int sn, LT::LexTable& LT);
 		~LexTable();
 		
 	private:
@@ -102,6 +103,7 @@ namespace LT // таблица лексем
 		Entry* table = nullptr; // массив строка таблицы лексем
 
 		std::vector<int> func_call_pos;
+		std::vector<int> assign_pos;
 
 		const char avail_lexems[LEX_COUNT] = {
 			LEX_NUMBER, LEX_STRING, LEX_UBYTE, LEX_BOOL, LEX_DEF, LEX_MAIN, LEX_FUNCTION, LEX_RETURN, LEX_PRINT, LEX_IF, LEX_ELIF, LEX_ELSE,

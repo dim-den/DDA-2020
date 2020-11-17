@@ -1,67 +1,68 @@
 Тест: без ошибок
 
  ------ ПРОТОКОЛ ------
- Дата: 16.11.20 22:59:08 
+ Дата: 17.11.20 15:49:06 
 
  ------ Параметры ------ 
 -log: log.txt
 -out: out.txt
 -in:  in.txt-
--debug: 1
+-debug: 0
 
  ------ Таблица лексем ------ 
 
 001 tfi(ti,ti)
 002 {
 003 dti;
-004 ?(ivlci)
-005 {
-006 i=iv(ivi);
-007 }
-008 o(ici)
-009 {
-010 i=ibi;
-011 }
-012 o(i)
-013 {
-014 i=ibi;
-015 }
-016 e
-017 {
-018 i=~i;
-019 }
-020 ri;
-021 }
-023 tfi(ti,ti)
-024 {
-025 ?(icivi)
-026 {
-027 rl;
-028 }
-029 rl;
-030 }
-032 m
-033 {
-034 dti=l;
+004 rl;
+005 ?(ivlci)
+006 {
+007 i=iv(ivi);
+008 }
+009 o(ici)
+010 {
+011 i=ibi;
+012 }
+013 o(icl)
+014 {
+015 i=ibi;
+016 }
+017 e
+018 {
+019 i=~i;
+020 }
+021 ri;
+022 }
+024 tfi(ti,ti)
+025 {
+026 ?(icivi)
+027 {
+028 rl;
+029 }
+030 rl;
+031 }
+033 m
+034 {
 035 dti=l;
-036 dti;
-037 ?(i(i,i))
-038 {
-039 pl;
-040 }
-041 e
-042 {
-043 pl;
-044 }
-045 dti=i(i,l);
-046 dti=l;
+036 dti=l;
+037 dti;
+038 ?(i(i,i))
+039 {
+040 pl;
+041 }
+042 e
+043 {
+044 pl;
+045 }
+046 dti=i(i,l);
 047 dti=l;
-048 dti=i(i,i);
-049 dti=i(i,l);
-050 pi;
+048 dti=l;
+049 dti=i(i,i);
+050 dti=i(i,l);
 051 pi;
-052 rl;
-053 }
+052 pi;
+053 rl;
+054 }
 
  		------ Таблица идентификаторов ------ 
 
@@ -72,26 +73,33 @@ fi              global_         	0002	function	number		0
 x               fi              	0005	parameter	number		0
 y               fi              	0008	parameter	number		0
 z               fi              	0013	variable	number		0
-lit_0           fi              	0019	literal		number		11
-IsRoot          global_         	0075	function	bool		false
-i               IsRoot          	0078	parameter	ubyte		0
-j               IsRoot          	0081	parameter	ubyte		0
-lit_1           IsRoot          	0094	literal		bool		true
-lit_2           IsRoot          	0098	literal		bool		false
-x               main            	0105	variable	number		0
-lit_3           main            	0107	literal		number		33
-sa              main            	0111	variable	string		[0]
-lit_4           main            	0113	literal		string		[9]hey there
-sb              main            	0117	variable	string		[0]
-lit_5           main            	0130	literal		string		[20]успешное копирование
-lit_6           main            	0136	literal		string		[29]скопировать строку не удалось
-sc              main            	0141	variable	string		[0]
-lit_7           main            	0147	literal		string		[16] you are welcome
-ua              main            	0152	variable	ubyte		0
-lit_8           main            	0154	literal		number		12
-ub              main            	0158	variable	ubyte		0
-lit_9           main            	0160	literal		number		34
-b               main            	0164	variable	bool		false
-z               main            	0175	variable	number		0
-lit_10          main            	0181	literal		number		11
-lit_11          main            	0191	literal		number		0
+lit_0           fi              	0016	literal		string		[3]123
+lit_1           fi              	0022	literal		number		11
+lit_2           fi              	0056	literal		number		15
+IsRoot          global_         	0080	function	bool		false
+i               IsRoot          	0083	parameter	ubyte		0
+j               IsRoot          	0086	parameter	ubyte		0
+lit_3           IsRoot          	0099	literal		bool		true
+lit_4           IsRoot          	0103	literal		bool		false
+main            global_         	0106	function	number		0
+x               main            	0110	variable	number		0
+lit_5           main            	0112	literal		number		13
+sa              main            	0116	variable	string		[0]
+lit_6           main            	0118	literal		string		[9]hey there
+sb              main            	0122	variable	string		[0]
+lit_7           main            	0135	literal		string		[20]успешное копирование
+lit_8           main            	0141	literal		string		[29]скопировать строку не удалось
+sc              main            	0146	variable	string		[0]
+lit_9           main            	0152	literal		string		[16] you are welcome
+ua              main            	0157	variable	ubyte		0
+lit_10          main            	0159	literal		number		12
+ub              main            	0163	variable	ubyte		0
+lit_11          main            	0165	literal		number		34
+b               main            	0169	variable	bool		false
+z               main            	0180	variable	number		0
+lit_12          main            	0186	literal		number		11
+lit_13          main            	0196	literal		number		0
+
+		----- Список ошибок -----
+
+SEM.212: Возвращаемый тип не соответствует типу функции, строка 4
