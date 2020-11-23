@@ -6,7 +6,7 @@ namespace IT
 
 	STDLib default_library[TI_LIBRARYSIZE] =
 	{
-		{{ LT_MAXSIZE + 0, "strconcat", LEX_GLOBAL, IT::IDDATATYPE::STR, IT::IDTYPE::F, TI_STR_DEFAULT } , {STR,STR}},
+		{{ LT_MAXSIZE + 0, "strconcat", LEX_GLOBAL, IT::IDDATATYPE::BOOL, IT::IDTYPE::F, TI_BOOL_DEFAULT } , {STR,STR}},
 		{{ LT_MAXSIZE + 1, "strcopy", LEX_GLOBAL, IT::IDDATATYPE::BOOL, IT::IDTYPE::F, TI_BOOL_DEFAULT } , {STR,STR}}
 	};
 

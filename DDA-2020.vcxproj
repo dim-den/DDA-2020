@@ -156,6 +156,7 @@
     <ClCompile Include="DDA-2020.cpp" />
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="FST.cpp" />
+    <ClCompile Include="Generation.cpp" />
     <ClCompile Include="GRB.cpp" />
     <ClCompile Include="In.cpp" />
     <ClCompile Include="IT.cpp" />
@@ -168,6 +169,7 @@
   <ItemGroup>
     <ClInclude Include="Error.h" />
     <ClInclude Include="FST.h" />
+    <ClInclude Include="Generation.h" />
     <ClInclude Include="GRB.h" />
     <ClInclude Include="In.h" />
     <ClInclude Include="IT.h" />

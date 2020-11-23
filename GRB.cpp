@@ -19,7 +19,7 @@ namespace GRB
 			Rule::Chain(8, TS('m'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), NS('S'))
 		),
 		Rule(NS('N'), GRB_ERRORS_SERIES + 1,	// последовательность операторов программы
-			13,
+			15,
 			Rule::Chain(5, TS('d'), TS('t'), TS('i'), TS(';'), NS('N')),
 			Rule::Chain(4, TS('d'), TS('t'), TS('i'), TS(';')),
 			Rule::Chain(4, TS('i'), TS('='), NS('E'), TS(';')),
@@ -30,6 +30,8 @@ namespace GRB
 			Rule::Chain(4, TS('p'), NS('E'), TS(';'), NS('N')),
 			Rule::Chain(3, TS('r'), NS('E'), TS(';')),
 			Rule::Chain(4, TS('r'), NS('E'), TS(';'), NS('N')),
+			Rule::Chain(3, TS('i'), NS('K'), TS(';')),
+			Rule::Chain(4, TS('i'), NS('k'), TS(';'), NS('N')),
 			Rule::Chain(6, TS('?'), NS('C'), TS('{'), NS('N'), TS('}'), NS('I')),
 			Rule::Chain(6, TS('?'), NS('C'), TS('{'), NS('N'), TS('}'), NS('N')),
 			Rule::Chain(5, TS('?'), NS('C'), TS('{'), NS('N'), TS('}'))

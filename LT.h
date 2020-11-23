@@ -5,6 +5,7 @@
 #include "Error.h"
 #include <queue>
 #include <stack>
+#include <sstream>
 #include <map>
 #define LEXEMA_FIXSIZE	1
 #define LT_MAXSIZE		4096
@@ -78,16 +79,15 @@ namespace LT // таблица лексем
 		LexTable(int size);
 		void Add(Entry entry);
 		Entry& GetEntry(int n) const;
-		void LexAnalysis(wchar_t* out_file, IT::IdTable& ID);													 // обработка входного файлаа и создание таблицы лексем и идентификаторов
+		void LexAnalysis(unsigned char* text, IT::IdTable& ID);													 // обработка входного файлаа и создание таблицы лексем и идентификаторов
 		std::vector<std::string> SeparateLexems(std::string& line);												 // разделение элементов языка
 		int AddId(IT::IdTable& ID, std::string& input, IT::IDDATATYPE& iddatatype, IT::IDTYPE& idtype, int idx, std::string& space_name); // добавление элемента в таблицу идентификаторрв
 		int AddLit(IT::IdTable& ID, int& lit_count, int idx, int value, std::string& space_name, IT::IDDATATYPE iddatatype, std::string data);
 		int LexDefinition(std::string input);																	 // производит анализ входной цепочки, возвращает номер элемента в таблице avail_lexems, если элемента нет возвращает -1
-		bool PolishNotation(IT::IdTable& ID, int lt_pos, int& func_call_count);									 // построение польской записи для выражения
-		void BuildPolish(IT::IdTable& ID);
+		void PolishNotation(IT::IdTable& ID, int lt_pos, int& func_call_count);									 // построение польской записи для выражения
+		void BuildPolish(IT::IdTable& ID, const std::vector<int>& expr_pos);
 		int Size() const;
 		std::vector<int> GetFuncCallPos() const;
-		std::vector<int> GetAssignPos() const;
 		void operator=(const LexTable& rhs) {
 			maxsize = rhs.maxsize;
 			size = rhs.size;

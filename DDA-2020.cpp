@@ -4,6 +4,8 @@
 #include <fstream>
 #include <iomanip>
 #include <vector>
+#include <chrono>
+#include <sstream>
 #include "tchar.h"
 using namespace std;
 
@@ -15,15 +17,17 @@ using namespace std;
 #include "MFST.h"
 #include "GRB.h"
 #include "Semantic.h"
+#include "Generation.h"
 #include "Tests.h"
 
-#include <chrono>
 int _tmain(int argc, wchar_t* argv[])
 {
 	setlocale(LC_ALL, "Russian");
 	auto start = chrono::steady_clock::now();
-	//std::ios::sync_with_stdio(false);
+	std::ios::sync_with_stdio(false);
 	//Tests::TestProgramm();
+
+	char* a = (char*)"anime";
 	Log::LOG log;
 	try
 	{
@@ -35,15 +39,11 @@ int _tmain(int argc, wchar_t* argv[])
 
 		In::IN in = In::getin(parm.in);
 
-		ofstream out(parm.out);
-		out << in.text;
-		out.close();
-
 		IT::IdTable IT(in.lexems);
 		LT::LexTable LT(in.lexems);
 
-		LT.LexAnalysis(parm.out, IT);
-
+		LT.LexAnalysis(in.text, IT); 
+		
 		log.WriteLexTable(LT);
 		log.WriteIdTable(IT);
 
@@ -54,7 +54,14 @@ int _tmain(int argc, wchar_t* argv[])
 		mfst.printrules();
 
 		SEM::Semantic semantic(LT, IT);
-		semantic.Analysis(parm);
+		semantic.Analysis();
+
+		LT.BuildPolish(IT, semantic.GetExprPos());
+		
+		log.WriteLexTable(LT);
+		log.WriteIdTable(IT);
+		Gen::Generator generator(LT, IT, parm.out);
+		generator.Generate();
 
 		cout << "-------------------------------------------------------------------------------\n";
 		cout << "Программа завершена успешно!" << endl;

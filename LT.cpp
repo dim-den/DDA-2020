@@ -28,16 +28,17 @@ namespace LT
 		}
 	}
 
-	void LexTable::LexAnalysis(wchar_t* out_file, IT::IdTable& ID) {
+	void LexTable::LexAnalysis(unsigned char* text, IT::IdTable& ID) 
+	{
 		int row = 1, col = 1;
 		queue <Error::ERROR> errors;
 		IT::IDDATATYPE nxt_id_datatype = IT::IDDATATYPE::NONE;
 		IT::IDTYPE nxt_id_type = IT::IDTYPE::N;
-		ifstream File(out_file);
+		std::istringstream code(reinterpret_cast<char*>(text));
 		string line, space_name;
 		int add_id_res = 0, lit_count = 0, func_call_count = 0, opened_leftbrace = 0;		
 		bool main_included = false;
-		while (getline(File, line))
+		while (getline(code, line))
 		{
 			vector<string> lexems = SeparateLexems(line);
 			col = 1;
@@ -45,16 +46,13 @@ namespace LT
 			{
 				if (lexem == "\n") continue;
 				int symbol_code = LexDefinition(lexem);
-				if (symbol_code < 0) errors.push(ERROR_THROW_IN(120, row, col)); 
+				if (symbol_code < 0) errors.push(ERROR_THROW_IN(120, row, col));
 				else 
 				{
 					LT::Entry entry;
 					//entry.idxTI = LT_TI_NULLIDX;
 					switch (symbol_code)
 					{
-					case lex_assign:
-						assign_pos.push_back(size + 1);
-						break;
 					case lex_number:
 						nxt_id_datatype = IT::IDDATATYPE::NUMB;
 						break;
@@ -163,7 +161,7 @@ namespace LT
 				{
 					if (!lexem.empty()) res.push_back(lexem);
 					string s; s = line[i];
-					if (line[i + 1] == LEX_ASSIGN) {
+					if (line[i + 1] == LEX_ASSIGN && line[i+2] != LEX_ASSIGN) {
 						s += '=';
 						res.push_back(s);
 						i++;
@@ -261,7 +259,7 @@ namespace LT
 		return -1;
 	}
 
-	bool LexTable::PolishNotation(IT::IdTable& ID, int lt_pos, int& func_call_count)
+	void LexTable::PolishNotation(IT::IdTable& ID, int lt_pos, int& func_call_count)
 	{
 		std::map<int, int> oper_priority =
 		{
@@ -282,11 +280,17 @@ namespace LT
 		std::stack<Entry> operators;			// стек операторов
 		std::stack<IT::Entry> called_func;	// стек вызовов функций
 		LT::Entry entry = table[lt_pos];
-		int length = 0;
-		while (table[lt_pos + length].lexema != LEX_SEMICOLON) length++;
-
+		int length = 0, opened_hesis = 0;
+		while (table[lt_pos + length].lexema != LEX_SEMICOLON && table[lt_pos + length].lexema != LEX_CONDITION)
+		{
+			if (table[lt_pos + length].lexema == LEX_LEFTHESIS) opened_hesis++;
+			else if (table[lt_pos + length].lexema == LEX_RIGHTHESIS) opened_hesis--;
+			if (opened_hesis < 0) break;
+			length++;
+		}
+		if (length == 1) return;
 		int sn = entry.sn, size = lt_pos;
-		for (int i = lt_pos; entry.lexema != LEX_SEMICOLON; i++, entry = table[i])
+		for (int i = lt_pos; i < lt_pos + length; i++, entry = table[i])
 		{
 			switch (entry.lexema)
 			{
@@ -344,8 +348,8 @@ namespace LT
 				}
 				called_func.top().value.vint++;
 				break;
-			default:
-				return false;
+			default: 
+				break;
 			}
 		}
 
@@ -355,28 +359,19 @@ namespace LT
 		}
 		for(int i = size; i < length + lt_pos; i++)
 			table[i] = { LEX_PAD , sn, LT::lexem_number::lex_pad };
-
-		return true;
 	}
 	
-	void LexTable::BuildPolish(IT::IdTable& ID)
+	void LexTable::BuildPolish(IT::IdTable& ID, const std::vector<int>& expr_pos)
 	{
 		int func_call_count = 0;
-		for (int pos : assign_pos)
-		{
-			if (!PolishNotation(ID, pos, func_call_count)) throw ERROR_THROW_L(128, table[pos].sn);
-		}
+		for (int pos : expr_pos)
+			PolishNotation(ID, pos, func_call_count);
 	}
 
 	std::vector<int> LexTable::GetFuncCallPos() const 
 	{
 		return func_call_pos;
-	}
-	
-	std::vector<int> LexTable::GetAssignPos() const 
-	{
-		return assign_pos;
-	}
+	}	
 
 	int LexTable::Size() const {
 		return size;
