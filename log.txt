@@ -1,11 +1,11 @@
 Тест: без ошибок
 
  ------ ПРОТОКОЛ ------
- Дата: 23.11.20 17:16:15 
+ Дата: 24.11.20 15:09:19 
 
  ------ Параметры ------ 
 -log: log.txt
--out: out.txt
+-out: out.asm
 -in:  in.txt-
 -debug: 0
 
@@ -18,13 +18,13 @@
 005 {
 006 i=iv(ivi);
 007 }
-008 o(ici)
+008 o(icl)
 009 {
 010 i=ibi;
 011 }
-012 o(icl)
+012 o(ici)
 013 {
-014 i=ibi;
+014 i=ibivl;
 015 }
 016 e
 017 {
@@ -60,8 +60,10 @@
 049 dti=i(i,l);
 050 pi;
 051 pi;
-052 rl;
-053 }
+052 dti=i;
+053 pi;
+054 rl;
+055 }
 
  		------ Таблица идентификаторов ------ 
 
@@ -73,120 +75,29 @@ x               fi              	0005	parameter	number		0
 y               fi              	0008	parameter	number		0
 z               fi              	0013	variable	number		0
 lit_0           fi              	0019	literal		number		11
-lit_1           fi              	0053	literal		number		15
-IsRoot          global_         	0079	function	bool		false
-i               IsRoot          	0082	parameter	ubyte		0
-j               IsRoot          	0085	parameter	ubyte		0
-lit_2           IsRoot          	0098	literal		bool		true
-lit_3           IsRoot          	0102	literal		bool		false
-main            global_         	0105	function	number		0
-x               main            	0109	variable	number		0
-lit_4           main            	0111	literal		number		13
-sa              main            	0115	variable	string		[0]
-lit_5           main            	0117	literal		string		[9]hey there
-sb              main            	0121	variable	string		[0]
-lit_6           main            	0132	literal		bool		true
-lit_7           main            	0136	literal		string		[20]успешное копирование
-lit_8           main            	0142	literal		string		[29]скопировать строку не удалось
-res             main            	0147	variable	bool		false
-lit_9           main            	0153	literal		string		[16] you are welcome
-ua              main            	0158	variable	ubyte		0
-lit_10          main            	0160	literal		number		6
-ub              main            	0164	variable	ubyte		0
-b               main            	0170	variable	bool		false
-z               main            	0181	variable	number		0
-lit_11          main            	0187	literal		number		11
-lit_12          main            	0197	literal		number		0
-
- ------ Таблица лексем ------ 
-
-001 tfi(ti,ti)
-002 {
-003 dti;
-004 ?(ilvci)
-005 {
-006 i=iiivv__;
-007 }
-008 o(ici)
-009 {
-010 i=iib;
-011 }
-012 o(icl)
-013 {
-014 i=iib;
-015 }
-016 e
-017 {
-018 i=i~iv;
-019 }
-020 ri;
-021 }
-023 tfi(ti,ti)
-024 {
-025 ?(iciiv)
-026 {
-027 rl;
-028 }
-029 rl;
-030 }
-032 m
-033 {
-034 dti=l;
-035 dti=l;
-036 dti;
-037 ?(ii@___cl)
-038 {
-039 pl;
-040 }
-041 e
-042 {
-043 pl;
-044 }
-045 dti=il@___;
-046 dti=l;
-047 dti=i;
-048 dti=ii@___;
-049 dti=il@___;
-050 pi;
-051 pi;
-052 rl;
-053 }
-
- 		------ Таблица идентификаторов ------ 
-
-Имя             Область видимости	Индекс	Тип		Тип данных	Значение
-strconcat       global_         	4096	function	bool		false
-strcopy         global_         	4097	function	bool		false
-fi              global_         	0002	function	number		0
-x               fi              	0005	parameter	number		0
-y               fi              	0008	parameter	number		0
-z               fi              	0013	variable	number		0
-lit_0           fi              	0019	literal		number		11
-lit_1           fi              	0053	literal		number		15
-IsRoot          global_         	0079	function	bool		false
-i               IsRoot          	0082	parameter	ubyte		0
-j               IsRoot          	0085	parameter	ubyte		0
-lit_2           IsRoot          	0098	literal		bool		true
-lit_3           IsRoot          	0102	literal		bool		false
-main            global_         	0105	function	number		0
-x               main            	0109	variable	number		0
-lit_4           main            	0111	literal		number		13
-sa              main            	0115	variable	string		[0]
-lit_5           main            	0117	literal		string		[9]hey there
-sb              main            	0121	variable	string		[0]
-lit_6           main            	0132	literal		bool		true
-lit_7           main            	0136	literal		string		[20]успешное копирование
-lit_8           main            	0142	literal		string		[29]скопировать строку не удалось
-res             main            	0147	variable	bool		false
-lit_9           main            	0153	literal		string		[16] you are welcome
-ua              main            	0158	variable	ubyte		0
-lit_10          main            	0160	literal		number		6
-ub              main            	0164	variable	ubyte		0
-b               main            	0170	variable	bool		false
-z               main            	0181	variable	number		0
-lit_11          main            	0187	literal		number		11
-lit_12          main            	0197	literal		number		0
-strcopy_0       global_         	0127	function	number		2
-strconcat_1     global_         	0151	function	number		2
-IsRoot_2        global_         	0174	function	number		2
-fi_3            global_         	0185	function	number		2
+lit_1           fi              	0039	literal		number		5
+lit_2           fi              	0062	literal		number		5
+IsRoot          global_         	0081	function	bool		false
+i               IsRoot          	0084	parameter	ubyte		0
+j               IsRoot          	0087	parameter	ubyte		0
+lit_3           IsRoot          	0100	literal		bool		true
+lit_4           IsRoot          	0104	literal		bool		false
+main            global_         	0107	function	number		0
+x               main            	0111	variable	number		0
+lit_5           main            	0113	literal		number		14
+sa              main            	0117	variable	string		[0]
+lit_6           main            	0119	literal		string		[9]hey there
+sb              main            	0123	variable	string		[0]
+lit_7           main            	0134	literal		bool		false
+lit_8           main            	0138	literal		string		[20]успешное копирование
+lit_9           main            	0144	literal		string		[29]скопировать строку не удалось
+res             main            	0149	variable	bool		false
+lit_10          main            	0155	literal		string		[16] you are welcome
+ua              main            	0160	variable	ubyte		0
+lit_11          main            	0162	literal		number		6
+ub              main            	0166	variable	ubyte		0
+b               main            	0172	variable	bool		false
+z               main            	0183	variable	number		0
+lit_12          main            	0189	literal		number		29
+test            main            	0200	variable	number		0
+lit_13          main            	0208	literal		number		0

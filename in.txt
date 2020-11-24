@@ -5,13 +5,13 @@ number function fi(number x, number y)
 	{
 		z=x*(x+y);
 	}
-	elif(x < y) 
+	elif(x == 5) 
 	{
 		z = x | y;
 	} 
-	elif (x == 15) 
+	elif (x < y) 
 	{
-	z = x & y;
+	z = x & y * 5;
 	} 
 	else 
 	{
@@ -31,10 +31,10 @@ bool function IsRoot(ubyte i, ubyte j)
 
 main
 {
-	def number x = 13;
-	def string sa = 'hey there';  
-	def string sb;  
-	if(strcopy(sb,sa) == true)
+	def number x = 14;
+	def string sa = 'hey there';
+	def string sb; 
+	if(strcopy(sb,sa) == false)
 	{ 
 		print 'успешное копирование'; 
 	}
@@ -46,8 +46,10 @@ main
 	def ubyte ua = 6;
 	def ubyte ub = ua;
 	def bool b = IsRoot(ua, ub);  
-	def number z = fi(x, 11); 
+	def number z = fi(x, 29); 
 	print sa;  
 	print z;
+	def number test = ua;
+	print test; 
 	return 0; 
 }

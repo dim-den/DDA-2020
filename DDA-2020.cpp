@@ -1,4 +1,5 @@
-﻿#include <iostream>
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
 #include <cwchar>
 #include <locale>
 #include <fstream>
@@ -26,8 +27,6 @@ int _tmain(int argc, wchar_t* argv[])
 	auto start = chrono::steady_clock::now();
 	std::ios::sync_with_stdio(false);
 	//Tests::TestProgramm();
-
-	char* a = (char*)"anime";
 	Log::LOG log;
 	try
 	{
@@ -57,9 +56,7 @@ int _tmain(int argc, wchar_t* argv[])
 		semantic.Analysis();
 
 		LT.BuildPolish(IT, semantic.GetExprPos());
-		
-		log.WriteLexTable(LT);
-		log.WriteIdTable(IT);
+
 		Gen::Generator generator(LT, IT, parm.out);
 		generator.Generate();
 

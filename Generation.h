@@ -21,5 +21,6 @@ namespace Gen
 		std::string GetType(IT::IDDATATYPE);
 		std::string GetOppositeCompareType(int);
 		IT::IDDATATYPE GenerateExpression(int pos);
+		void GenerateComparison(int& pos, int condition_count);
 	};
 }

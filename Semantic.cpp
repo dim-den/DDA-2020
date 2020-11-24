@@ -93,6 +93,8 @@ namespace SEM
 				else if (it_entry.iddatatype != datatype) errors.push(ERROR_THROW_L(209, lt_entry.sn));
 				if (it_entry.idtype == IT::IDTYPE::F) for (;LexTable.GetEntry(pos).lexema != LEX_RIGHTHESIS;pos++) {} // игнорируем параметры вызова функции
 			}
+			else if (((lt_entry.lexema == LEX_ARIFMETIC) || (lt_entry.lexema == LEX_BYTEOP) || (lt_entry.lexema == LEX_INV)) && datatype == IT::STR) // недопустмы арифмитические операции над string
+				errors.push(ERROR_THROW_L(212, lt_entry.sn));
 		}
 		return datatype;
 	}
