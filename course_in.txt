@@ -37,7 +37,8 @@ bool function CheckMask(string mask)
 		if(address[i] <= '9' and address[i] >= '0')
 		{
 			if(numbers>3) => return false;
-			buff[numbers++] = address[i];
+			buff[numbers] = address[i];
+			numbers++;
 		}
 		elif(address[i] == '.' or i == mask_size)
 		{

@@ -1,11 +1,11 @@
 Тест: без ошибок
 
  ------ ПРОТОКОЛ ------
- Дата: 24.11.20 15:09:19 
+ Дата: 24.11.20 22:47:01 
 
  ------ Параметры ------ 
 -log: log.txt
--out: out.asm
+-out: out.txt
 -in:  in.txt-
 -debug: 0
 
@@ -14,56 +14,37 @@
 001 tfi(ti,ti)
 002 {
 003 dti;
-004 ?(ivlci)
-005 {
-006 i=iv(ivi);
-007 }
-008 o(icl)
-009 {
-010 i=ibi;
-011 }
-012 o(ici)
-013 {
-014 i=ibivl;
+004 ?(ivlci)>i=iv(ivi);
+005 o(icl)>i=ibi;
+006 o(ici)>i=ibivl;
+007 e>i=~ivi;
+008 ri;
+009 }
+011 tfi(ti,ti)
+012 {
+013 ?(icivi)>rl;
+014 rl;
 015 }
-016 e
-017 {
-018 i=~ivi;
-019 }
-020 ri;
-021 }
-023 tfi(ti,ti)
-024 {
-025 ?(icivi)
-026 {
-027 rl;
-028 }
-029 rl;
-030 }
-032 m
-033 {
-034 dti=l;
-035 dti=l;
-036 dti;
-037 ?(i(i,i)cl)
-038 {
-039 pl;
-040 }
-041 e
-042 {
-043 pl;
-044 }
-045 dti=i(i,l);
-046 dti=l;
-047 dti=i;
-048 dti=i(i,i);
-049 dti=i(i,l);
-050 pi;
-051 pi;
-052 dti=i;
-053 pi;
-054 rl;
-055 }
+017 m
+018 {
+019 dti;
+020 gi;
+021 dti;
+022 gi;
+023 dti;
+024 ?(i(i,i)cl)>pl;
+025 e>pl;
+026 dti=i(i,l);
+027 dti=l;
+028 dti=i;
+029 dti=i(i,i);
+030 dti=i(i,l);
+031 pi;
+032 pi;
+033 dti=i;
+034 pi;
+035 rl;
+036 }
 
  		------ Таблица идентификаторов ------ 
 
@@ -75,29 +56,27 @@ x               fi              	0005	parameter	number		0
 y               fi              	0008	parameter	number		0
 z               fi              	0013	variable	number		0
 lit_0           fi              	0019	literal		number		11
-lit_1           fi              	0039	literal		number		5
-lit_2           fi              	0062	literal		number		5
-IsRoot          global_         	0081	function	bool		false
-i               IsRoot          	0084	parameter	ubyte		0
-j               IsRoot          	0087	parameter	ubyte		0
-lit_3           IsRoot          	0100	literal		bool		true
-lit_4           IsRoot          	0104	literal		bool		false
-main            global_         	0107	function	number		0
-x               main            	0111	variable	number		0
-lit_5           main            	0113	literal		number		14
-sa              main            	0117	variable	string		[0]
-lit_6           main            	0119	literal		string		[9]hey there
-sb              main            	0123	variable	string		[0]
-lit_7           main            	0134	literal		bool		false
-lit_8           main            	0138	literal		string		[20]успешное копирование
-lit_9           main            	0144	literal		string		[29]скопировать строку не удалось
-res             main            	0149	variable	bool		false
-lit_10          main            	0155	literal		string		[16] you are welcome
-ua              main            	0160	variable	ubyte		0
-lit_11          main            	0162	literal		number		6
-ub              main            	0166	variable	ubyte		0
-b               main            	0172	variable	bool		false
-z               main            	0183	variable	number		0
-lit_12          main            	0189	literal		number		29
-test            main            	0200	variable	number		0
-lit_13          main            	0208	literal		number		0
+lit_1           fi              	0038	literal		number		5
+lit_2           fi              	0060	literal		number		5
+IsRoot          global_         	0077	function	bool		false
+i               IsRoot          	0080	parameter	ubyte		0
+j               IsRoot          	0083	parameter	ubyte		0
+lit_3           IsRoot          	0096	literal		bool		true
+lit_4           IsRoot          	0099	literal		bool		false
+main            global_         	0102	function	number		0
+x               main            	0106	variable	number		0
+sa              main            	0113	variable	string		[0]
+sb              main            	0120	variable	string		[0]
+lit_5           main            	0131	literal		bool		true
+lit_6           main            	0135	literal		string		[20]успешное копирование
+lit_7           main            	0140	literal		string		[29]скопировать строку не удалось
+res             main            	0144	variable	bool		false
+lit_8           main            	0150	literal		string		[16] you are welcome
+ua              main            	0155	variable	ubyte		0
+lit_9           main            	0157	literal		number		6
+ub              main            	0161	variable	ubyte		0
+b               main            	0167	variable	bool		false
+z               main            	0178	variable	number		0
+lit_10          main            	0184	literal		number		29
+test            main            	0195	variable	number		0
+lit_11          main            	0203	literal		number		0

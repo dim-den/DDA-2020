@@ -10,6 +10,9 @@ extrn print_number : proc
 extrn print_string : proc
 extrn print_bool : proc
 extrn print_ubyte : proc
+extrn get_string : proc
+extrn get_bool : proc
+extrn get_number : proc
 extrn strcopy : proc
 extrn strconcat : proc
 
@@ -21,15 +24,13 @@ lit_1 SDWORD 5
 lit_2 SDWORD 5
 lit_3 BYTE 1
 lit_4 BYTE 0
-lit_5 SDWORD 14
-lit_6 SBYTE "hey there", 0
-lit_7 BYTE 0
-lit_8 SBYTE "успешное копирование", 0
-lit_9 SBYTE "скопировать строку не удалось", 0
-lit_10 SBYTE " you are welcome", 0
-lit_11 SDWORD 6
-lit_12 SDWORD 29
-lit_13 SDWORD 0
+lit_5 BYTE 1
+lit_6 SBYTE "успешное копирование", 0
+lit_7 SBYTE "скопировать строку не удалось", 0
+lit_8 SBYTE " you are welcome", 0
+lit_9 SDWORD 6
+lit_10 SDWORD 29
+lit_11 SDWORD 0
 
 .data
 fi_z SDWORD ?
@@ -168,41 +169,39 @@ ret
 IsRoot endp
 
 main PROC
-push lit_5
-pop main_x
-
+push offset main_x
+call get_number
 push offset main_sa
-push offset lit_6
-call strcopy
+call get_string
 push offset main_sb
 push offset main_sa
 call strcopy
 push eax
 mov eax, 0
-mov al, lit_7
+mov al, lit_5
 push eax
 pop ebx
 pop eax
 cmp eax, ebx
 jne condition_4
-push offset lit_8
+push offset lit_6
 call print_string
 jmp if_end_2
 
 condition_4:
-push offset lit_9
+push offset lit_7
 call print_string
 jmp if_end_2
 
 if_end_2:
 push offset main_sa
-push offset lit_10
+push offset lit_8
 call strconcat
 push eax
 pop eax
 mov main_res, al
 
-push lit_11
+push lit_9
 pop eax
 mov main_ua, al
 
@@ -224,7 +223,7 @@ pop eax
 mov main_b, al
 
 push main_x
-push lit_12
+push lit_10
 call fi
 push eax
 pop main_z
@@ -240,7 +239,7 @@ pop main_test
 
 push main_test
 call print_number
-push lit_13
+push lit_11
 call ExitProcess
 main ENDP
 

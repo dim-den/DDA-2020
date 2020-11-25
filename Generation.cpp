@@ -59,6 +59,9 @@ namespace Gen
 		*out << "extrn print_string : proc\n";
 		*out << "extrn print_bool : proc\n";
 		*out << "extrn print_ubyte : proc\n";
+		*out << "extrn get_string : proc\n";
+		*out << "extrn get_bool : proc\n";
+		*out << "extrn get_number : proc\n";
 		*out << "extrn strcopy : proc\n";
 		*out << "extrn strconcat : proc\n\n";
 		*out << ".stack 4096\n\n";
@@ -118,7 +121,7 @@ namespace Gen
 		bool first_par = true;
 		char current_proc[ID_MAXSIZE];
 		bool is_proc = false, is_main = false;
-		bool is_if = false, last_if;
+		bool is_if = false, last_if, single_if = false;
 		int if_count = 0, condition_count = 0;
 
 		int lt_pos = 0, leftbrace_opened = 0;
@@ -157,13 +160,16 @@ namespace Gen
 				GenerateComparison(i, condition_count);
 				break;
 			case LEX_ELIF:
-				last_if = false;
+				last_if = single_if= false;
 				*out << "condition_" << condition_count++ << ":\n";
 				GenerateComparison(i, condition_count);
 				break;
 			case LEX_ELSE:
-				last_if = false;
+				last_if = single_if = false;
 				*out << "condition_" << condition_count++ << ":\n";
+				break;
+			case LEX_TO:
+				single_if = true;
 				break;
 			case LEX_LEFTBRACE:
 				leftbrace_opened++;
@@ -198,6 +204,20 @@ namespace Gen
 					}
 				}
 				break;
+			case LEX_SEMICOLON:
+				if (is_if && single_if)
+				{
+					*out << "jmp " << "if_end_" << if_count << '\n' << '\n';
+					lt_entry = LT_ENTRY(i + 1);
+					if (lt_entry.lexema != LEX_ELIF && lt_entry.lexema != LEX_ELSE)
+					{
+						is_if = single_if = false;
+						if (last_if)* out << "condition_" << condition_count++ << ":\n";
+						*out << "if_end_" << if_count++ << ":\n";
+
+					}
+				}
+				break;
 			case LEX_RETURN:
 				GenerateExpression(++i);
 				if (is_proc)* out << "pop eax\nret\n\n";
@@ -218,9 +238,17 @@ namespace Gen
 				expr_type = GenerateExpression(++i);
 				*out << "call ";
 				if (expr_type == IT::STR)* out << "print_string\n";
-				if (expr_type == IT::BOOL)* out << "print_bool\n";
-				if (expr_type == IT::NUMB)* out << "print_number\n";
-				if (expr_type == IT::UBYTE)* out << "print_ubyte\n";
+				else if (expr_type == IT::BOOL)* out << "print_bool\n";
+				else if (expr_type == IT::NUMB)* out << "print_number\n";
+				else if (expr_type == IT::UBYTE)* out << "print_ubyte\n";
+				break;
+			case LEX_GET:
+				it_entry = IT_ENTRY(LT_ENTRY(++i).idxTI);
+				*out << "push offset " << it_entry.spacename << '_' << it_entry.id << '\n';
+				*out << "call ";
+				if (it_entry.iddatatype == IT::STR)* out << "get_string\n";
+				else if (it_entry.iddatatype == IT::BOOL)* out << "get_bool\n";
+				else *out << "get_number\n";
 				break;
 			default:
 				break;

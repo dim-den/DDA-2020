@@ -25,6 +25,7 @@
 #define LEX_DEF			'd'
 #define LEX_RETURN		'r'
 #define LEX_PRINT		'p'
+#define LEX_GET			'g'
 #define LEX_IF		    '?'
 #define LEX_ELIF	    'o'
 #define LEX_ELSE	    'e'
@@ -33,6 +34,7 @@
 #define LEX_COMMA		','
 #define LEX_LEFTBRACE	'{'
 #define LEX_BRACELET	'}'
+#define LEX_TO			'>'
 #define LEX_LEFTHESIS	'('
 #define LEX_RIGHTHESIS	')'
 #define LEX_PLUS		'v'
@@ -56,7 +58,7 @@
 #define LEX_RIGHTBRACKET '['
 #define LEX_PAD			'_'
 #define LEX_FUNC_CALL	'@'
-#define LEX_COUNT		37
+#define LEX_COUNT		39
 #define LEX_GLOBAL		"global_"
 #define LEX_MAIN_SPACE	"main"
 
@@ -96,7 +98,7 @@ namespace LT // таблица лексем
 				table[i] = rhs.table[i];
 		}
 		~LexTable();
-		
+
 	private:
 		int maxsize;
 		int size;
@@ -106,9 +108,9 @@ namespace LT // таблица лексем
 		std::vector<int> assign_pos;
 
 		const char avail_lexems[LEX_COUNT] = {
-			LEX_NUMBER, LEX_STRING, LEX_UBYTE, LEX_BOOL, LEX_DEF, LEX_MAIN, LEX_FUNCTION, LEX_RETURN, LEX_PRINT, LEX_IF, LEX_ELIF, LEX_ELSE,
+			LEX_NUMBER, LEX_STRING, LEX_UBYTE, LEX_BOOL, LEX_DEF, LEX_MAIN, LEX_FUNCTION, LEX_RETURN, LEX_PRINT, LEX_GET, LEX_IF, LEX_ELIF, LEX_ELSE,
 			LEX_LEFTBRACE, LEX_BRACELET, LEX_LEFTHESIS, LEX_RIGHTHESIS, LEX_ASSIGN, LEX_COMMA  ,
-			LEX_SEMICOLON, LEX_PLUS, LEX_MINUS, LEX_STAR, LEX_DIRSLASH, LEX_LESS, LEX_MORE, LEX_LESSEQUAL, LEX_MOREEQUAL,
+			LEX_SEMICOLON, LEX_TO, LEX_PLUS, LEX_MINUS, LEX_STAR, LEX_DIRSLASH, LEX_LESS, LEX_MORE, LEX_LESSEQUAL, LEX_MOREEQUAL,
 			LEX_EQUAL, LEX_NOTEQUAL, LEX_AND, LEX_OR, LEX_INV, LEX_TRUE, LEX_FALSE, LEX_LITERAL, LEX_DIG_LITERAL, LEX_ID
 		};
 
@@ -197,13 +199,20 @@ namespace LT // таблица лексем
 			Fst::NODE(1, Fst::RELATION('t', 5)),
 			Fst::NODE()
 		},
-		{ // 9. if
+		{ // 9. get
+			4,
+			Fst::NODE(1, Fst::RELATION('g', 1)),
+			Fst::NODE(1, Fst::RELATION('e', 2)),
+			Fst::NODE(1, Fst::RELATION('t', 3)),
+			Fst::NODE()
+		},
+		{ // 10. if
 			3,
 			Fst::NODE(1, Fst::RELATION('i', 1)),
 			Fst::NODE(1, Fst::RELATION('f', 2)),
 			Fst::NODE()
 		},
-		{ // 10. elif
+		{ // 11. elif
 			5,
 			Fst::NODE(1, Fst::RELATION('e', 1)),
 			Fst::NODE(1, Fst::RELATION('l', 2)),
@@ -211,7 +220,7 @@ namespace LT // таблица лексем
 			Fst::NODE(1, Fst::RELATION('f', 4)),
 			Fst::NODE()
 		},
-		{ // 11. else
+		{ // 12. else
 			5,
 			Fst::NODE(1, Fst::RELATION('e', 1)),
 			Fst::NODE(1, Fst::RELATION('l', 2)),
@@ -219,111 +228,117 @@ namespace LT // таблица лексем
 			Fst::NODE(1, Fst::RELATION('e', 4)),
 			Fst::NODE()
 		},
-		{ // 12. {
+		{ // 13. {
 			2,
 			Fst::NODE(1,Fst::RELATION('{',1)),
 			Fst::NODE()
 		},
-		{ // 13. }
+		{ // 14. }
 			2,
 			Fst::NODE(1,Fst::RELATION('}',1)),
 			Fst::NODE()
 		},
-		{ // 14. (
+		{ // 15. (
 			2,
 			Fst::NODE(1,Fst::RELATION('(',1)),
 			Fst::NODE()
 		},
-		{ // 15. )
+		{ // 16. )
 			2,
 			Fst::NODE(1,Fst::RELATION(')',1)),
 			Fst::NODE()
 		},
-		{ // 16. =
+		{ // 17. =
 			2,
 			Fst::NODE(1,Fst::RELATION('=',1)),
 			Fst::NODE()
 		},
-		{ // 17. ,
+		{ // 18. ,
 			2,
 			Fst::NODE(1,Fst::RELATION(',',1)),
 			Fst::NODE()
 		},
-		{ // 18. ;
+		{ // 19. ;
 			2,
 			Fst::NODE(1,Fst::RELATION(';',1)),
 			Fst::NODE()
 		},
-		{ // 19. +
+		{ // 20. =>
+			3,
+			Fst::NODE(1, Fst::RELATION('=', 1)),
+			Fst::NODE(1, Fst::RELATION('>', 2)),
+			Fst::NODE()
+		},
+		{ // 21. +
 			2,
 			Fst::NODE(1,Fst::RELATION('+',1)),
 			Fst::NODE()
 		},
-		{ // 20. -
+		{ // 22. -
 			2,
 			Fst::NODE(1,Fst::RELATION('-',1)),
 			Fst::NODE()
 		},
-		{ // 21. *
+		{ // 23. *
 			2,
 			Fst::NODE(1,Fst::RELATION('*',1)),
 			Fst::NODE()
 		},
-		{ // 22. /
+		{ // 24. /
 			2,
 			Fst::NODE(1,Fst::RELATION('/',1)),
 			Fst::NODE()
 		},
-		{ // 23. <
+		{ // 25. <
 			2,
 			Fst::NODE(1, Fst::RELATION('<', 1)),
 			Fst::NODE()
 		},
-		{ // 24. >
+		{ // 26. >
 			2,
 			Fst::NODE(1,Fst::RELATION('>',1)),
 			Fst::NODE()
 		},
-		{ // 25. <=
+		{ // 27. <=
 			3,
 			Fst::NODE(1, Fst::RELATION('<', 1)),
 			Fst::NODE(1, Fst::RELATION('=', 2)),
 			Fst::NODE()
 		},
-		{ // 26. >=
+		{ // 28. >=
 			3,
 			Fst::NODE(1, Fst::RELATION('>',1)),
 			Fst::NODE(1, Fst::RELATION('=', 2)),
 			Fst::NODE()
 		},
-		{ // 27. ==
+		{ // 29. ==
 			3,
 			Fst::NODE(1, Fst::RELATION('=', 1)),
 			Fst::NODE(1, Fst::RELATION('=', 2)),
 			Fst::NODE()
 		},
-		{ // 28. !=
+		{ // 30. !=
 			3,
 			Fst::NODE(1,Fst::RELATION('!',1)),
 			Fst::NODE(1,Fst::RELATION('=',2)),
 			Fst::NODE()
 		},
-		{ // 29. &
+		{ // 31. &
 		2,
 			Fst::NODE(1, Fst::RELATION('&', 1)),
 			Fst::NODE()
 		},
-		{ // 30. |
+		{ // 32. |
 			2,
 			Fst::NODE(1,Fst::RELATION('|',1)),
 			Fst::NODE()
 		},
-		{ // 31. ~
+		{ // 33. ~
 			2,
 			Fst::NODE(1,Fst::RELATION('~',1)),
 			Fst::NODE()
 		},
-		{ // 32. true (bool lit)
+		{ // 34. true (bool lit)
 			5,
 			Fst::NODE(1, Fst::RELATION('t', 1)),
 			Fst::NODE(1, Fst::RELATION('r', 2)),
@@ -331,7 +346,7 @@ namespace LT // таблица лексем
 			Fst::NODE(1, Fst::RELATION('e', 4)),
 			Fst::NODE()
 		},
-		{ // 33. false (bool lit)
+		{ // 35. false (bool lit)
 			6,
 			Fst::NODE(1, Fst::RELATION('f', 1)),
 			Fst::NODE(1, Fst::RELATION('a', 2)),
@@ -340,19 +355,19 @@ namespace LT // таблица лексем
 			Fst::NODE(1, Fst::RELATION('e', 5)),
 			Fst::NODE()
 		},
-		{ // 34. string lit
+		{ // 36. string lit
 			4,
 			Fst::NODE(2, Fst::RELATION('\'', 1), Fst::RELATION('\'', 2)),
 			Fst::CreateNode({1,1,1,1,1,1}),
 			Fst::NODE(1, Fst::RELATION('\'', 3)),
 			Fst::NODE()
 		},
-		{ // 35. digital lit
+		{ // 37. digital lit
 			2,
 			Fst::CreateNode({0,0,0,0,1,0}),
 			Fst::NODE()
 		},
-		{ // 36. id
+		{ // 38. id
 			2,
 			Fst::CreateNode({1,1,0,0,0,0}),
 			Fst::NODE()
@@ -370,6 +385,7 @@ namespace LT // таблица лексем
 		lex_function,
 		lex_return,
 		lex_print,
+		lex_get,
 		lex_if,
 		lex_elif,
 		lex_else,
@@ -380,6 +396,7 @@ namespace LT // таблица лексем
 		lex_assign,
 		lex_comma,
 		lex_semicolon,
+		lex_to,
 		lex_plus,
 		lex_minus,
 		lex_star,

@@ -84,13 +84,16 @@ namespace SEM
 		LT::Entry lt_entry = LexTable.GetEntry(pos);
 		IT::Entry it_entry;
 		IT::IDDATATYPE datatype = IT::IDDATATYPE::NONE;
-		for (; (lt_entry.lexema != LEX_SEMICOLON) && (lt_entry.lexema != LEX_CONDITION) && (lt_entry.lexema != LEX_LEFTBRACE); pos++, lt_entry = LexTable.GetEntry(pos))
+		for (; (lt_entry.lexema != LEX_SEMICOLON) && (lt_entry.lexema != LEX_CONDITION) && (lt_entry.lexema != LEX_LEFTBRACE) && (lt_entry.lexema != LEX_TO); pos++, lt_entry = LexTable.GetEntry(pos))
 		{
 			if (lt_entry.lexema == LEX_ID || lt_entry.lexema == LEX_LITERAL)
 			{
 				it_entry = IdTable.GetEntry(lt_entry.idxTI);
 				if (datatype == IT::IDDATATYPE::NONE) datatype = it_entry.iddatatype;
-				else if (it_entry.iddatatype != datatype) errors.push(ERROR_THROW_L(209, lt_entry.sn));
+				else if (it_entry.iddatatype != datatype) {
+
+					errors.push(ERROR_THROW_L(209, lt_entry.sn));
+				};
 				if (it_entry.idtype == IT::IDTYPE::F) for (;LexTable.GetEntry(pos).lexema != LEX_RIGHTHESIS;pos++) {} // игнорируем параметры вызова функции
 			}
 			else if (((lt_entry.lexema == LEX_ARIFMETIC) || (lt_entry.lexema == LEX_BYTEOP) || (lt_entry.lexema == LEX_INV)) && datatype == IT::STR) // недопустмы арифмитические операции над string
