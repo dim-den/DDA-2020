@@ -51,7 +51,7 @@ namespace Gen
 	{
 		*out << ".586P\n";
 		*out << ".model flat, stdcall\n";
-		*out << "includelib libucrt.lib\n";
+		//*out << "includelib libucrt.lib\n";
 		*out << "includelib user32.lib\n";
 		*out << "includelib kernel32.lib\n\n";
 		*out << "ExitProcess PROTO : DWORD\n\n";
@@ -122,7 +122,7 @@ namespace Gen
 		char current_proc[ID_MAXSIZE];
 		bool is_proc = false, is_main = false;
 		bool is_if = false, last_if, single_if = false;
-		int if_count = 0, condition_count = 0;
+		int if_count = 0, condition_count = 0, condition_end = 0;
 
 		int lt_pos = 0, leftbrace_opened = 0;
 		IT::Entry it_entry;
@@ -152,17 +152,17 @@ namespace Gen
 				first_par = true;
 				break;
 			case LEX_MAIN:
-				*out << "main PROC\n";
+				*out << "main PROC C\n";
 				is_main = true;
 				break;
 			case LEX_IF:
 				is_if = last_if = true;
-				GenerateComparison(i, condition_count);
+				GenerateComparison(i, condition_count, condition_end);
 				break;
 			case LEX_ELIF:
 				last_if = single_if= false;
 				*out << "condition_" << condition_count++ << ":\n";
-				GenerateComparison(i, condition_count);
+				GenerateComparison(i, condition_count, condition_end);
 				break;
 			case LEX_ELSE:
 				last_if = single_if = false;
@@ -187,7 +187,7 @@ namespace Gen
 					{
 						*out << "call ExitProcess\n";
 						*out << "main ENDP\n\n";
-						*out << "end main";
+						*out << "end\n";
 						is_main = false;
 					}
 				}
@@ -250,6 +250,18 @@ namespace Gen
 				else if (it_entry.iddatatype == IT::BOOL)* out << "get_bool\n";
 				else *out << "get_number\n";
 				break;
+			case LEX_UNARY:
+				if (lt_entry.idxLex == LT::lex_inc || lt_entry.idxLex == LT::lex_dec)
+				{
+					expr_type = GenerateExpression(i - 1);
+					if (expr_type == IT::UBYTE)
+					{
+						*out << "pop eax\n";
+						*out << "mov " << it_entry.spacename << '_' << it_entry.id << ", al\n\n";
+					}
+					else *out << "pop " << it_entry.spacename << '_' << it_entry.id << '\n' << '\n';
+				}
+				break;
 			default:
 				break;
 			}
@@ -261,7 +273,7 @@ namespace Gen
 		IT::Entry it_entry;
 		LT::Entry lt_entry;
 		IT::IDDATATYPE expr_type = IT::IDDATATYPE::NONE;
-		for (lt_entry = LT_ENTRY(pos);lt_entry.lexema != LEX_PAD && lt_entry.lexema != LEX_SEMICOLON && lt_entry.lexema != LEX_CONDITION && lt_entry.lexema != LEX_RIGHTHESIS; pos++, lt_entry = LT_ENTRY(pos))
+		for (lt_entry = LT_ENTRY(pos);lt_entry.lexema != LEX_PAD && lt_entry.lexema != LEX_SEMICOLON && lt_entry.lexema != LEX_CONDITION && lt_entry.lexema != LEX_RIGHTHESIS && lt_entry.lexema != LEX_COMPOP; pos++, lt_entry = LT_ENTRY(pos))
 		{
 			if (lt_entry.lexema == LEX_ID || lt_entry.lexema == LEX_LITERAL)
 			{
@@ -290,68 +302,89 @@ namespace Gen
 				for (int i = 0; it_entry.id[i] != '_'; i++)* out << it_entry.id[i];
 				*out << "\npush eax\n";
 			}
-			else if (lt_entry.lexema == LEX_ARIFMETIC || lt_entry.lexema == LEX_BYTEOP || lt_entry.lexema == LEX_INV)
+			else if (lt_entry.lexema == LEX_ARIFMETIC || lt_entry.lexema == LEX_BYTEOP || lt_entry.lexema == LEX_UNARY)
 			{
-				switch (lt_entry.idxLex)
-				{
-				case LT::lex_plus:
-					*out << "pop ebx\n";
-					*out << "pop eax\n";
-					*out << "add eax, ebx\n";
-					*out << "push eax\n";
-					break;
-				case LT::lex_minus:
-					*out << "pop ebx\n";
-					*out << "pop eax\n";
-					*out << "sub eax, ebx\n";
-					*out << "push eax\n";
-					break;
-				case LT::lex_star:
-					*out << "pop ebx\n";
-					*out << "pop eax\n";
-					*out << "imul eax, ebx\n";
-					*out << "push eax\n";
-					break;
-				case LT::lex_dirslash:
-					*out << "pop ebx\n";
-					*out << "pop eax\n";
-					*out << "cdq\n";
-					*out << "idiv ebx\n";
-					*out << "push eax\n";
-					break;
-				case LT::lex_and:
-					*out << "pop ebx\n";
-					*out << "pop eax\n";
-					*out << "and eax, ebx\n";
-					*out << "push eax\n";
-					break;
-				case LT::lex_or:
-					*out << "pop ebx\n";
-					*out << "pop eax\n";
-					*out << "or eax, ebx\n";
-					*out << "push eax\n";
-					break;
-				case LT::lex_inv:
-					*out << "pop eax\n";
-					*out << "not eax\n";
-					*out << "push eax\n";
-					break;
-				}
+				if (lt_entry.idxLex == LT::lex_plus)		 { GEN_PLUS }
+				else if(lt_entry.idxLex == LT::lex_minus)	 { GEN_MINUS }
+				else if(lt_entry.idxLex == LT::lex_star)	 { GEN_MULT }
+				else if(lt_entry.idxLex == LT::lex_dirslash) { GEN_DIV }
+				else if(lt_entry.idxLex == LT::lex_and)		 { GEN_AND }
+				else if(lt_entry.idxLex == LT::lex_or)		 { GEN_OR }
+				else if(lt_entry.idxLex == LT::lex_inv)		 { GEN_INV }
+				else if(lt_entry.idxLex == LT::lex_inc)		 { GEN_INC }
+				else if(lt_entry.idxLex == LT::lex_dec)		 { GEN_DEC }
 			}
 		}
 		return expr_type;
 	}
 
-	void Generator::GenerateComparison(int& pos, int condition_count)
+	bool Generator::IsManyConditions(int pos)
+	{
+		while(true)
+		{
+			if (LT_ENTRY(pos).lexema == LEX_RIGHTHESIS) return false;
+			else if (LT_ENTRY(pos).lexema == LEX_COMPOP) return true;
+			pos++;
+		}
+	}
+	void Generator::GenerateComparison(int& pos, int& condition_count, int& condition_end)
 	{
 		LT::Entry lt_entry;
-		GenerateExpression(pos + 2); // в стеке результат левого значения
-		while (LT_ENTRY(pos).lexema != LEX_CONDITION) pos++;
-		lt_entry = LT_ENTRY(pos);
-		GenerateExpression(++pos);
-		*out << "pop ebx\n";
-		*out << "pop eax\n";
-		*out << "cmp eax, ebx\n";
-		*out << GetOppositeCompareType(lt_entry.idxLex) << " condition_" << condition_count << '\n';
+		if (!IsManyConditions(pos))		
+		{
+			GenerateExpression(pos + 2); // в стеке результат левого значения
+			while (LT_ENTRY(pos).lexema != LEX_CONDITION) pos++;
+			lt_entry = LT_ENTRY(pos);
+			GenerateExpression(++pos);
+			*out << "pop ebx\n";
+			*out << "pop eax\n";
+			*out << "cmp eax, ebx\n";
+			*out << GetOppositeCompareType(lt_entry.idxLex) << " condition_" << condition_count << '\n';
+		}
+		else
+		{
+			bool first_comp = true;
+			LT::Entry last_comp;
+			while (true)
+			{
+				GenerateExpression(pos + 2); // в стеке результат левого значения
+				while (LT_ENTRY(pos).lexema != LEX_CONDITION) pos++;
+				lt_entry = LT_ENTRY(pos);
+				GenerateExpression(++pos);
+				*out << "pop ebx\n";
+				*out << "pop eax\n";
+				*out << "cmp eax, ebx\n";
+				*out << GetOppositeCompareType(lt_entry.idxLex) << " condition_" << condition_count << '\n';
+				*out << "push 1\n";
+				*out << "jmp condition_end_" << condition_end << '\n';
+				*out << "condition_" << condition_count++ << ':' << '\n';
+				*out << "push 0\n";
+				*out << "condition_end_" << condition_end++ << ':' << '\n';
+				while (true)
+				{
+					if (LT_ENTRY(pos).lexema == LEX_RIGHTHESIS)
+					{
+						if (last_comp.idxLex == LT::lex_comp_and) { GEN_AND }
+						else { GEN_OR };
+						*out << "cmp eax, 0\n";
+						*out << "je condition_" << condition_count << '\n';
+						return;
+					}
+					else if (LT_ENTRY(pos).lexema == LEX_COMPOP)
+					{
+						if(first_comp) first_comp = false;
+						else
+						{
+							if (last_comp.idxLex == LT::lex_comp_and) { GEN_AND }
+							else { GEN_OR } ;
+						}
+						last_comp = LT_ENTRY(pos);
+						pos--;
+						break;
+					}
+					pos++;
+				}
+			}
+		}
 	}
 }

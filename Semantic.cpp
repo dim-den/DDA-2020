@@ -53,8 +53,10 @@ namespace SEM
 				if (expected_type != res) errors.push(ERROR_THROW_L(210, entry.sn));
 				break;
 			case LEX_CONDITION:		// проверка условия (левого и правого операнда)
+
 				left_begin = i;
-				for (;(LexTable.GetEntry(left_begin).lexema != LEX_IF) && (LexTable.GetEntry(left_begin).lexema != LEX_ELIF);left_begin--) {} // находим крайнее левое положение
+				for (;(LexTable.GetEntry(left_begin).lexema != LEX_IF) && (LexTable.GetEntry(left_begin).lexema != LEX_ELIF) && (LexTable.GetEntry(left_begin).lexema != LEX_COMPOP);left_begin--) {} // находим крайнее левое положение
+				if (LexTable.GetEntry(left_begin).lexema == LEX_COMPOP) left_begin--;
 				if (GetExprType(left_begin + 2) != GetExprType(i + 1)) errors.push(ERROR_THROW_L(211, entry.sn));
 				break;
 			case LEX_RETURN:		// соответсвие возвращаемого значения
@@ -72,6 +74,13 @@ namespace SEM
 			case LEX_PRINT:
 				GetExprType(i + 1);
 				break;
+			case LEX_UNARY:
+				if (entry.idxLex == LT::lex_inc || entry.idxLex == LT::lex_dec)
+				{
+					res = GetExprType(i);
+					if (res != IT::NUMB && res != IT::UBYTE) errors.push(ERROR_THROW_L(212, entry.sn));
+				}
+				break;
 			default:
 				break;
 			}
@@ -84,7 +93,7 @@ namespace SEM
 		LT::Entry lt_entry = LexTable.GetEntry(pos);
 		IT::Entry it_entry;
 		IT::IDDATATYPE datatype = IT::IDDATATYPE::NONE;
-		for (; (lt_entry.lexema != LEX_SEMICOLON) && (lt_entry.lexema != LEX_CONDITION) && (lt_entry.lexema != LEX_LEFTBRACE) && (lt_entry.lexema != LEX_TO); pos++, lt_entry = LexTable.GetEntry(pos))
+		for (; (lt_entry.lexema != LEX_SEMICOLON) && (lt_entry.lexema != LEX_CONDITION) && (lt_entry.lexema != LEX_LEFTBRACE) && (lt_entry.lexema != LEX_TO) && (lt_entry.lexema != LEX_COMPOP); pos++, lt_entry = LexTable.GetEntry(pos))
 		{
 			if (lt_entry.lexema == LEX_ID || lt_entry.lexema == LEX_LITERAL)
 			{
@@ -96,7 +105,7 @@ namespace SEM
 				};
 				if (it_entry.idtype == IT::IDTYPE::F) for (;LexTable.GetEntry(pos).lexema != LEX_RIGHTHESIS;pos++) {} // игнорируем параметры вызова функции
 			}
-			else if (((lt_entry.lexema == LEX_ARIFMETIC) || (lt_entry.lexema == LEX_BYTEOP) || (lt_entry.lexema == LEX_INV)) && datatype == IT::STR) // недопустмы арифмитические операции над string
+			else if (((lt_entry.lexema == LEX_ARIFMETIC) || (lt_entry.lexema == LEX_BYTEOP) || (lt_entry.lexema == LEX_UNARY)) && datatype == IT::STR) // недопустмы арифмитические операции над string
 				errors.push(ERROR_THROW_L(212, lt_entry.sn));
 		}
 		return datatype;

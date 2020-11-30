@@ -5,18 +5,16 @@
 #define IN_CODE_SEPARATOR '/'
 #define IN_CODE_INSTR_SEPARATOR ';'
 #define IN_CODE_SPACE ' '
-#define IN_CODE_QUOTE '\''
+#define IN_CODE_QUOTE '\"'
 #define EXPR_COUNT 17
 // Таблица проверки входной информации, индекс = код (Windows-1251) символа
 // значение IN::F - запрещенный символ, IN::T - разрешенный символ, IN::I - игнорировать (не вводить),
 // если 0<= значение < 256 - то вводится данное значение
-//97-122
-
 
 #define IN_CODE_TABLE {\
 IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::I, IN::T, IN::F, IN::F, IN::F, IN::F, IN::F, \
-IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
-IN::T, IN::T, IN::F, IN::F, IN::F, IN::F, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, \
+IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::T, \
+IN::T, IN::T, IN::T, IN::F, IN::F, IN::F, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, \
 IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, \
 IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, \
 IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, \

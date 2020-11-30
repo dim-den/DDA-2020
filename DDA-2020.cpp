@@ -57,6 +57,8 @@ int _tmain(int argc, wchar_t* argv[])
 
 		LT.BuildPolish(IT, semantic.GetExprPos());
 
+		log.WriteLexTable(LT);
+		log.WriteIdTable(IT);
 		Gen::Generator generator(LT, IT, parm.out);
 		generator.Generate();
 

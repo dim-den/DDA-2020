@@ -2,8 +2,8 @@ number function fi(number x, number y)
 {
 	def number z;
 	if(x + 11 >= y) => z=x*(x+y);
-	elif(x == 5) => z = x | y;
-	elif (x < y) => z = x & y * 5;
+	elif(x == 5 or x > 10) => z = x | y;
+	elif (x < y and x - 4 != 3) => z = x & y * 5;
 	else =>	z=~y+x;
 	return z;  
 }
@@ -18,11 +18,12 @@ main
 {
 	def number x;
 	get x;
-	def string sa = 'hey';
+	++x;
+	def string sa = "hey";
 	def string sb; 
-	if(strcopy(sb,sa) == true) => print 'успешное копирование'; 	
-	else => print 'скопировать строку не удалось'; 	
-	def bool res = strconcat(sa, ' you are welcome');
+	if(strcopy(sb,sa) == true) => print "успешное копирование"; 	
+	else => print "скопировать строку не удалось"; 	
+	def bool res = strconcat(sa, ", you are welcome!");
 	def ubyte ua = 6;
 	def ubyte ub = ua;
 	def bool b = IsRoot(ua, ub);  

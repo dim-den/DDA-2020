@@ -35,7 +35,8 @@ namespace Fst
 		FST() = default;
 	};
 
-	struct avail_symbols {
+	struct avail_symbols 
+	{
 		bool low_eng : 1;
 		bool upp_eng : 1;
 		bool low_rus : 1;

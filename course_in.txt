@@ -34,7 +34,7 @@ bool function CheckMask(string mask)
 	string buff;
 	foreach ubyte i in [0, mask_size] step i++
 	{
-		if(address[i] <= '9' and address[i] >= '0')
+		if(address[i] <= '9' and address[i] >= '0') 
 		{
 			if(numbers>3) => return false;
 			buff[numbers] = address[i];

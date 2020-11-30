@@ -46,7 +46,7 @@ namespace LT
 			{
 				if (lexem == "\n") continue;
 				int symbol_code = LexDefinition(lexem);
-				if (symbol_code < 0) { cout << lexem;errors.push(ERROR_THROW_IN(120, row, col)); }
+				if (symbol_code < 0) errors.push(ERROR_THROW_IN(120, row, col));
 				else
 				{
 					LT::Entry entry;
@@ -138,13 +138,18 @@ namespace LT
 		string lexem;
 		bool str_lit = false;
 		int pos_str_lit = 0;
-		if (line[0] != IN_CODE_SEPARATOR) {
-			for (int i = 0; i < line.size() - 1; i++) {
-				if (line[i] == IN_CODE_SPACE && !str_lit) {
+		if (line[0] != IN_CODE_SEPARATOR)
+		{
+			for (int i = 0; i < line.size() - 1; i++) 
+			{
+				if (str_lit && line[i] != LEX_QUOTE) lexem += line[i];
+				else if (line[i] == IN_CODE_SPACE) 
+				{
 					res.push_back(lexem);
 					lexem = "";
 				}
-				else if (line[i] == LEX_QUOTE) {
+				else if (line[i] == LEX_QUOTE) 
+				{
 					if (str_lit) {
 						lexem += LEX_QUOTE;
 						res.push_back(lexem);
@@ -170,6 +175,12 @@ namespace LT
 					else if (line[i] == LEX_ASSIGN && line[i + 1] == '>')
 					{
 						s += '>';
+						res.push_back(s);
+						i++;
+					}
+					else if ((line[i] == '+' && line[i + 1] == '+') || (line[i] == '-' && line[i + 1] == '-'))
+					{
+						s += line[i + 1];
 						res.push_back(s);
 						i++;
 					}
@@ -278,15 +289,17 @@ namespace LT
 			{lex_and,			3},
 			{lex_or,			3},
 			{lex_inv,			3},
+			{lex_inc,			4},
+			{lex_dec,			4},
 			{lex_leftbracket,	4},
-			{lex_rightbracket,	4},
+			{lex_rightbracket,	4}
 		};
 
 		std::stack<Entry> operators;			// стек операторов
 		std::stack<IT::Entry> called_func;	// стек вызовов функций
 		LT::Entry entry = table[lt_pos];
 		int length = 0, opened_hesis = 0;
-		while (table[lt_pos + length].lexema != LEX_SEMICOLON && table[lt_pos + length].lexema != LEX_CONDITION)
+		while (table[lt_pos + length].lexema != LEX_SEMICOLON && table[lt_pos + length].lexema != LEX_CONDITION && table[lt_pos + length].lexema != LEX_COMPOP)
 		{
 			if (table[lt_pos + length].lexema == LEX_LEFTHESIS) opened_hesis++;
 			else if (table[lt_pos + length].lexema == LEX_RIGHTHESIS) opened_hesis--;
@@ -299,7 +312,7 @@ namespace LT
 		{
 			switch (entry.lexema)
 			{
-			case LEX_INV: // ~
+			case LEX_UNARY: // ~ ++ --
 			case LEX_BYTEOP:// & |
 			case LEX_ARIFMETIC: // + - * /
 				while (!operators.empty() && operators.top().lexema != LEX_LEFTBRACKET && oper_priority[entry.idxLex] <= oper_priority[operators.top().idxLex]) {

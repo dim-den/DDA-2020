@@ -1,7 +1,7 @@
 Тест: без ошибок
 
  ------ ПРОТОКОЛ ------
- Дата: 24.11.20 22:47:01 
+ Дата: 30.11.20 17:27:46 
 
  ------ Параметры ------ 
 -log: log.txt
@@ -15,9 +15,9 @@
 002 {
 003 dti;
 004 ?(ivlci)>i=iv(ivi);
-005 o(icl)>i=ibi;
-006 o(ici)>i=ibivl;
-007 e>i=~ivi;
+005 o(iclzicl)>i=ibi;
+006 o(icizivlcl)>i=ibivl;
+007 e>i=uivi;
 008 ri;
 009 }
 011 tfi(ti,ti)
@@ -29,8 +29,8 @@
 018 {
 019 dti;
 020 gi;
-021 dti;
-022 gi;
+021 ui;
+022 dti=l;
 023 dti;
 024 ?(i(i,i)cl)>pl;
 025 e>pl;
@@ -57,26 +57,110 @@ y               fi              	0008	parameter	number		0
 z               fi              	0013	variable	number		0
 lit_0           fi              	0019	literal		number		11
 lit_1           fi              	0038	literal		number		5
-lit_2           fi              	0060	literal		number		5
-IsRoot          global_         	0077	function	bool		false
-i               IsRoot          	0080	parameter	ubyte		0
-j               IsRoot          	0083	parameter	ubyte		0
-lit_3           IsRoot          	0096	literal		bool		true
-lit_4           IsRoot          	0099	literal		bool		false
-main            global_         	0102	function	number		0
-x               main            	0106	variable	number		0
-sa              main            	0113	variable	string		[0]
-sb              main            	0120	variable	string		[0]
-lit_5           main            	0131	literal		bool		true
-lit_6           main            	0135	literal		string		[20]успешное копирование
-lit_7           main            	0140	literal		string		[29]скопировать строку не удалось
-res             main            	0144	variable	bool		false
-lit_8           main            	0150	literal		string		[16] you are welcome
-ua              main            	0155	variable	ubyte		0
-lit_9           main            	0157	literal		number		6
-ub              main            	0161	variable	ubyte		0
-b               main            	0167	variable	bool		false
-z               main            	0178	variable	number		0
-lit_10          main            	0184	literal		number		29
-test            main            	0195	variable	number		0
-lit_11          main            	0203	literal		number		0
+lit_2           fi              	0042	literal		number		10
+lit_3           fi              	0059	literal		number		4
+lit_4           fi              	0061	literal		number		3
+lit_5           fi              	0070	literal		number		5
+IsRoot          global_         	0087	function	bool		false
+i               IsRoot          	0090	parameter	ubyte		0
+j               IsRoot          	0093	parameter	ubyte		0
+lit_6           IsRoot          	0106	literal		bool		true
+lit_7           IsRoot          	0109	literal		bool		false
+main            global_         	0112	function	number		0
+x               main            	0116	variable	number		0
+sa              main            	0126	variable	string		[0]
+lit_8           main            	0128	literal		string		[3]hey
+sb              main            	0132	variable	string		[0]
+lit_9           main            	0143	literal		bool		true
+lit_10          main            	0147	literal		string		[20]успешное копирование
+lit_11          main            	0152	literal		string		[29]скопировать строку не удалось
+res             main            	0156	variable	bool		false
+lit_12          main            	0162	literal		string		[18], you are welcome!
+ua              main            	0167	variable	ubyte		0
+lit_13          main            	0169	literal		number		6
+ub              main            	0173	variable	ubyte		0
+b               main            	0179	variable	bool		false
+z               main            	0190	variable	number		0
+lit_14          main            	0196	literal		number		29
+test            main            	0207	variable	number		0
+lit_15          main            	0215	literal		number		0
+
+ ------ Таблица лексем ------ 
+
+001 tfi(ti,ti)
+002 {
+003 dti;
+004 ?(ilvci)>i=iiivv__;
+005 o(iclzicl)>i=iib;
+006 o(icizilvcl)>i=iiblv;
+007 e>i=iuiv;
+008 ri;
+009 }
+011 tfi(ti,ti)
+012 {
+013 ?(iciiv)>rl;
+014 rl;
+015 }
+017 m
+018 {
+019 dti;
+020 gi;
+021 iu;
+022 dti=l;
+023 dti;
+024 ?(ii@___cl)>pl;
+025 e>pl;
+026 dti=il@___;
+027 dti=l;
+028 dti=i;
+029 dti=ii@___;
+030 dti=il@___;
+031 pi;
+032 pi;
+033 dti=i;
+034 pi;
+035 rl;
+036 }
+
+ 		------ Таблица идентификаторов ------ 
+
+Имя             Область видимости	Индекс	Тип		Тип данных	Значение
+strconcat       global_         	4096	function	bool		false
+strcopy         global_         	4097	function	bool		false
+fi              global_         	0002	function	number		0
+x               fi              	0005	parameter	number		0
+y               fi              	0008	parameter	number		0
+z               fi              	0013	variable	number		0
+lit_0           fi              	0019	literal		number		11
+lit_1           fi              	0038	literal		number		5
+lit_2           fi              	0042	literal		number		10
+lit_3           fi              	0059	literal		number		4
+lit_4           fi              	0061	literal		number		3
+lit_5           fi              	0070	literal		number		5
+IsRoot          global_         	0087	function	bool		false
+i               IsRoot          	0090	parameter	ubyte		0
+j               IsRoot          	0093	parameter	ubyte		0
+lit_6           IsRoot          	0106	literal		bool		true
+lit_7           IsRoot          	0109	literal		bool		false
+main            global_         	0112	function	number		0
+x               main            	0116	variable	number		0
+sa              main            	0126	variable	string		[0]
+lit_8           main            	0128	literal		string		[3]hey
+sb              main            	0132	variable	string		[0]
+lit_9           main            	0143	literal		bool		true
+lit_10          main            	0147	literal		string		[20]успешное копирование
+lit_11          main            	0152	literal		string		[29]скопировать строку не удалось
+res             main            	0156	variable	bool		false
+lit_12          main            	0162	literal		string		[18], you are welcome!
+ua              main            	0167	variable	ubyte		0
+lit_13          main            	0169	literal		number		6
+ub              main            	0173	variable	ubyte		0
+b               main            	0179	variable	bool		false
+z               main            	0190	variable	number		0
+lit_14          main            	0196	literal		number		29
+test            main            	0207	variable	number		0
+lit_15          main            	0215	literal		number		0
+strcopy_0       global_         	0138	function	number		2
+strconcat_1     global_         	0160	function	number		2
+IsRoot_2        global_         	0183	function	number		2
+fi_3            global_         	0194	function	number		2

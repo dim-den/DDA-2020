@@ -33,9 +33,8 @@ namespace GRB
 			Rule::Chain(3, TS('?'), NS('C'), NS('O')),
 			Rule::Chain(3, TS('r'), NS('E'), TS(';')),
 			Rule::Chain(4, TS('r'), NS('E'), TS(';'), NS('N')),
-			Rule::Chain(3, TS('i'), NS('K'), TS(';')),
-			Rule::Chain(4, TS('i'), NS('k'), TS(';'), NS('N'))
-		
+			Rule::Chain(3, TS('u'), TS('i'), TS(';')),
+			Rule::Chain(4, TS('u'), TS('i'), TS(';'), NS('N'))		
 		),
 		Rule(NS('E'), GRB_ERRORS_SERIES + 2,	// выражение
 			10,
@@ -47,8 +46,8 @@ namespace GRB
 			Rule::Chain(4, TS('('), NS('E'), TS(')'), NS('M')),
 			Rule::Chain(2, TS('i'), NS('K')),
 			Rule::Chain(3, TS('i'), NS('K'), NS('M')),
-			Rule::Chain(2, TS('~'), NS('E')),
-			Rule::Chain(3, TS('~'), NS('E'), NS('M'))
+			Rule::Chain(2, TS('u'), TS('i')),
+			Rule::Chain(3, TS('u'), TS('i'), NS('M'))
 		),
 		Rule(NS('P'), GRB_ERRORS_SERIES + 3,	// блок параметра функций
 			2,
@@ -80,9 +79,10 @@ namespace GRB
 			Rule::Chain(2, TS('b'), NS('E'), NS('M'))
 		),
 		Rule(NS('C'), GRB_ERRORS_SERIES + 6,	// условие
-			2,
+			3,
 			Rule::Chain(5, TS('('), NS('E'), TS('c'), NS('E'), TS(')')),
-			Rule::Chain(3, TS('('), NS('E'), TS(')'))
+			Rule::Chain(6, TS('('), NS('E'), TS('c'), NS('E'), NS('C'), TS(')')),
+			Rule::Chain(4, TS('z'), NS('E'), TS('c'), NS('E'))
 		),
 		Rule(NS('I'), GRB_ERRORS_SERIES + 7,	// условная конструкция
 			6,

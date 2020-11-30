@@ -194,6 +194,7 @@ namespace MFST
 		default:
 			break;
 		}
+
 		return rc;
 	}
 
@@ -223,7 +224,7 @@ namespace MFST
 		int lpos = -1;
 		if (n < MFST_DIAGN_NUMBER && (lpos = diagnosis[n].lenta_position) >= 0) {
 			errid = greibach.getRule(diagnosis[n].nrule).iderror;
-			throw ERROR_THROW_IN(errid, lex.GetEntry(lpos).sn, 1);
+			throw ERROR_THROW_L(errid, lex.GetEntry(lpos).sn);
 		}
 		return rc;
 	}
