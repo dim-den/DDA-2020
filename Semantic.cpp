@@ -53,7 +53,6 @@ namespace SEM
 				if (expected_type != res) errors.push(ERROR_THROW_L(210, entry.sn));
 				break;
 			case LEX_CONDITION:		// проверка условия (левого и правого операнда)
-
 				left_begin = i;
 				for (;(LexTable.GetEntry(left_begin).lexema != LEX_IF) && (LexTable.GetEntry(left_begin).lexema != LEX_ELIF) && (LexTable.GetEntry(left_begin).lexema != LEX_COMPOP);left_begin--) {} // находим крайнее левое положение
 				if (LexTable.GetEntry(left_begin).lexema == LEX_COMPOP) left_begin--;
@@ -92,17 +91,17 @@ namespace SEM
 		expr_pos.push_back(pos); // запоминаем позицию выражения ( для польской нотации)
 		LT::Entry lt_entry = LexTable.GetEntry(pos);
 		IT::Entry it_entry;
-		IT::IDDATATYPE datatype = IT::IDDATATYPE::NONE;
+		IT::IDDATATYPE datatype = IT::IDDATATYPE::NONE, expected_type = IT::IDDATATYPE::NONE;
 		for (; (lt_entry.lexema != LEX_SEMICOLON) && (lt_entry.lexema != LEX_CONDITION) && (lt_entry.lexema != LEX_LEFTBRACE) && (lt_entry.lexema != LEX_TO) && (lt_entry.lexema != LEX_COMPOP); pos++, lt_entry = LexTable.GetEntry(pos))
 		{
 			if (lt_entry.lexema == LEX_ID || lt_entry.lexema == LEX_LITERAL)
 			{
 				it_entry = IdTable.GetEntry(lt_entry.idxTI);
-				if (datatype == IT::IDDATATYPE::NONE) datatype = it_entry.iddatatype;
-				else if (it_entry.iddatatype != datatype) {
+				expected_type = it_entry.iddatatype;
+				if (CheckIndex(it_entry, pos)) expected_type = IT::UBYTE;
+				if (datatype == IT::IDDATATYPE::NONE) datatype = expected_type;
+				else if (expected_type != datatype) errors.push(ERROR_THROW_L(209, lt_entry.sn));
 
-					errors.push(ERROR_THROW_L(209, lt_entry.sn));
-				};
 				if (it_entry.idtype == IT::IDTYPE::F) for (;LexTable.GetEntry(pos).lexema != LEX_RIGHTHESIS;pos++) {} // игнорируем параметры вызова функции
 			}
 			else if (((lt_entry.lexema == LEX_ARIFMETIC) || (lt_entry.lexema == LEX_BYTEOP) || (lt_entry.lexema == LEX_UNARY)) && datatype == IT::STR) // недопустмы арифмитические операции над string
@@ -126,6 +125,20 @@ namespace SEM
 		return expected_params;
 	}
 
+	bool Semantic::CheckIndex(IT::Entry& entry, int& pos)
+	{
+		LT::Entry lt_entry = LexTable.GetEntry(pos + 1);
+		IT::Entry it_entry;
+		if (lt_entry.lexema == LEX_LEFTBRACKET)
+		{
+			pos += 2;
+			if(entry.iddatatype != IT::STR) errors.push(ERROR_THROW_L(213, lt_entry.sn));
+			it_entry = IdTable.GetEntry(LexTable.GetEntry(pos++).idxTI);
+			if(it_entry.iddatatype != IT::NUMB && it_entry.iddatatype != IT::UBYTE) errors.push(ERROR_THROW_L(214, lt_entry.sn));
+			return true;
+		}
+		return false;
+	}
 	std::vector<int> Semantic::GetExprPos() const
 	{
 		return expr_pos;

@@ -26,7 +26,7 @@ lit_4 SDWORD 3
 lit_5 SDWORD 5
 lit_6 BYTE 1
 lit_7 BYTE 0
-lit_8 SBYTE "hey", 0
+lit_8 SBYTE "hey 12354", 0
 lit_9 BYTE 1
 lit_10 SBYTE "успешное копирование", 0
 lit_11 SBYTE "скопировать строку не удалось", 0

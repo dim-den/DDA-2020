@@ -70,7 +70,7 @@ namespace Log
 			<< "\n-log: " << l
 			<< "\n-out: " << o
 			<< "\n-in:  " << i 
-			<< "-\n-debug: " << parm.debug << '\n');
+			<< "\n-debug: " << parm.debug << '\n');
 	}
 
 	void LOG::WriteIn(const In::IN& in) { // вывести информацию о входном потоке

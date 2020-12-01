@@ -81,26 +81,28 @@ namespace Fst
 		return (rc ? fst.rstates[fst.nstates - 1] == lstring ? 0 : fst.position : fst.position);
 	}
 
-	NODE CreateNode(avail_symbols as) {
+	NODE CreateNode(avail_symbols as) 
+	{
 		Fst::NODE p;
 		short node1 = 1, node2 = 2;
 		const int eng_size = 26, rus_size = 33, numb_size = 10;
 		const int  punctuations_size = 9;
 		const char punctuations[punctuations_size] = { ',', '!', '?', ':', '-', '.', '_', '\'', ' ' };
-		if (!as.str_lit) {
+		if (!as.str_lit && !as.ubt_lit) {
 			node1 = 0; node2 = 1;
 		}
 
-		int relations = as.low_eng * eng_size + as.upp_eng * eng_size + as.low_rus * rus_size + as.upp_rus * rus_size + as.numbers * numb_size + as.str_lit * punctuations_size;
-		p.relations = new Fst::RELATION[relations * 2];
-		p.n_relation = relations * 2;
+		int relations = as.low_eng * eng_size + as.upp_eng * eng_size + as.low_rus * rus_size + as.upp_rus * rus_size + as.numbers * numb_size + as.str_lit * punctuations_size + +as.ubt_lit * punctuations_size;
+		if (!as.ubt_lit) relations *= 2;
+		p.relations = new Fst::RELATION[relations];
+		p.n_relation = relations;
 
 		int size = 0;
 
-		auto add_range = [&p, node1, node2, &size](int first, int last = ' ') {
+		auto add_range = [&p, node1, node2, &size, &as](int first, int last = ' ') {
 			for (int i = first; i <= last; i++) {
 				p.relations[size++] = { (char)i, node2 };
-				p.relations[size++] = { (char)i, node1 };
+				if(!as.ubt_lit) p.relations[size++] = { (char)i, node1 };
 			};
 		};
 
@@ -109,11 +111,11 @@ namespace Fst
 		if (as.low_rus) add_range('а', 'я');
 		if (as.upp_rus) add_range('А', 'Я');
 		if (as.numbers) add_range('0', '9');
-		if (as.str_lit) 
+		if (as.str_lit || as.ubt_lit) 
 			for (int i = 0; i < punctuations_size;i++)
 			{
 				p.relations[size++] = { (char)punctuations[i], node2 };
-				p.relations[size++] = { (char)punctuations[i], node1 };
+				if (!as.ubt_lit) p.relations[size++] = { (char)punctuations[i], node1 };
 			}
 		return p;
 	}

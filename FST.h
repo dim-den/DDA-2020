@@ -43,6 +43,7 @@ namespace Fst
 		bool upp_rus : 1;
 		bool numbers : 1;
 		bool str_lit : 1;
+		bool ubt_lit : 1;
 	};
 
 	int execute(FST& fst);

@@ -88,6 +88,9 @@ namespace Gen
 				case IT::IDDATATYPE::BOOL:
 					*out << entry.value.vbool << '\n';
 					break;
+				case IT::IDDATATYPE::UBYTE:
+					*out << (int)entry.value.vubyte << '\n';
+					break;
 				default:
 					return false;
 				}
@@ -279,20 +282,35 @@ namespace Gen
 			{
 				it_entry = IT_ENTRY(lt_entry.idxTI);
 				expr_type = it_entry.iddatatype;
-				if (it_entry.iddatatype != IT::UBYTE && expr_type != IT::BOOL)
-				{
-					*out << "push ";
-					if (it_entry.iddatatype == IT::IDDATATYPE::STR)* out << "offset ";
-					if (it_entry.idtype != IT::IDTYPE::L)* out << it_entry.spacename << '_';
-					*out << it_entry.id << '\n';
-				}
-				else
+				if (it_entry.iddatatype == IT::UBYTE || expr_type == IT::BOOL)
 				{
 					*out << "mov eax, 0\n";
 					*out << "mov al, ";
 					if (it_entry.idtype != IT::IDTYPE::L)* out << it_entry.spacename << '_';
 					*out << it_entry.id << '\n';
-					*out << "push eax\n";
+					*out << "push eax\n";	
+				}
+				else
+				{
+					if(it_entry.iddatatype == IT::IDDATATYPE::STR && LT_ENTRY(pos+1).lexema ==LEX_LEFTBRACKET)
+					{
+						IT::Entry snd_entry = IT_ENTRY(LT_ENTRY(pos+2).idxTI);
+						if (snd_entry.iddatatype == IT::UBYTE)* out << "mov ebx, 0\n mov bl, ";
+						else *out << "mov ebx, ";
+						if (snd_entry.idtype != IT::IDTYPE::L)* out << snd_entry.spacename << '_';
+						*out << snd_entry.id << '\n';
+						*out << "mov eax, 0\n";
+						*out << "mov al, " << it_entry.spacename << '_' << it_entry.id << "[ebx]\n";
+						*out << "push eax\n";
+						pos += 3;
+					}
+					else
+					{
+						*out << "push ";
+						if (it_entry.iddatatype == IT::IDDATATYPE::STR)* out << "offset ";
+						if (it_entry.idtype != IT::IDTYPE::L)* out << it_entry.spacename << '_';
+						*out << it_entry.id << '\n';
+					}
 				}
 			}
 			else if (lt_entry.lexema == '@')

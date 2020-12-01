@@ -108,6 +108,10 @@ namespace LT
 						add_id_res = AddLit(ID, lit_count, size, atoi(lexem.c_str()), space_name, IT::IDDATATYPE::NUMB, "");
 						entry.idxTI = add_id_res;
 						break;
+					case lex_ubyte_lit:
+						add_id_res = AddLit(ID, lit_count, size, (int)lexem[1], space_name, IT::IDDATATYPE::UBYTE, "");
+						entry.idxTI = add_id_res;
+						break;
 					case lex_id:
 						add_id_res = AddId(ID, lexem, nxt_id_datatype, nxt_id_type, size, space_name);
 						if (add_id_res == -1) errors.push(ERROR_THROW_IN(202, row, col));
@@ -121,7 +125,8 @@ namespace LT
 
 					entry.lexema = avail_lexems[symbol_code];
 					entry.sn = row;
-					if (symbol_code != lex_id && symbol_code != lex_str_lit && symbol_code != lex_dig_lit && symbol_code != lex_true_lit && symbol_code != lex_false_lit) entry.idxLex = symbol_code;
+					if (symbol_code != lex_id && symbol_code != lex_str_lit && symbol_code != lex_dig_lit && symbol_code != lex_true_lit && symbol_code != lex_false_lit && symbol_code != lex_ubyte_lit)
+						entry.idxLex = symbol_code;
 					Add(entry);
 
 				}
@@ -256,6 +261,7 @@ namespace LT
 		ent.idtype = IT::IDTYPE::L;
 		if (iddatatype == IT::IDDATATYPE::NUMB) ent.value.vint = value;
 		else if (iddatatype == IT::IDDATATYPE::BOOL) ent.value.vbool = value;
+		else if (iddatatype == IT::IDDATATYPE::UBYTE) ent.value.vubyte = value;
 		else if (iddatatype == IT::IDDATATYPE::STR) {
 			if (value - 2 > TI_STR_MAXSIZE) return -1;
 			ent.value.vstr.len = value - 2;
@@ -357,6 +363,10 @@ namespace LT
 				break;
 			case LEX_LITERAL:
 				table[size++] = entry;
+				break;
+			case LEX_LEFTBRACKET:
+				size += 3;
+				i += 2;
 				break;
 			case LEX_COMMA:
 				if (called_func.top().value.vint == 0) called_func.top().value.vint = 1;
