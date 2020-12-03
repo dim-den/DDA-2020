@@ -117,7 +117,7 @@ namespace Log
 	void LOG::WriteIdTable(IT::IdTable& idtable) {
 		output("\n\n \t\t------ Таблица идентификаторов ------ \n");
 		int IDsize = idtable.Size();
-		output('\n' << setw(ID_MAXSIZE) << setfill(' ') << left << "Имя" << setw(ID_MAXSIZE) << "Область видимости" << left << "\tИндекс\tТип\t\tТип данных\tЗначение\n");
+		output('\n' << setw(ID_MAXSIZE) << setfill(' ') << left << "Имя" << setw(ID_MAXSIZE) << "Область видимости" << left << "\tИндекс\tТип\t\t\tТип данных\tЗначение\n");
 		for (int i = 0; i < IDsize;i++) {
 			IT::Entry ent = idtable.GetEntry(i);
 

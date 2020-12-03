@@ -88,11 +88,14 @@ namespace Fst
 		const int eng_size = 26, rus_size = 33, numb_size = 10;
 		const int  punctuations_size = 9;
 		const char punctuations[punctuations_size] = { ',', '!', '?', ':', '-', '.', '_', '\'', ' ' };
+		const int arifmetic_size = 2;
+		const char arifmetic[arifmetic_size] = { '+', '-' };
 		if (!as.str_lit && !as.ubt_lit) {
 			node1 = 0; node2 = 1;
 		}
 
 		int relations = as.low_eng * eng_size + as.upp_eng * eng_size + as.low_rus * rus_size + as.upp_rus * rus_size + as.numbers * numb_size + as.str_lit * punctuations_size + +as.ubt_lit * punctuations_size;
+		if (!as.str_lit && as.numbers) relations += arifmetic_size;
 		if (!as.ubt_lit) relations *= 2;
 		p.relations = new Fst::RELATION[relations];
 		p.n_relation = relations;
@@ -116,6 +119,12 @@ namespace Fst
 			{
 				p.relations[size++] = { (char)punctuations[i], node2 };
 				if (!as.ubt_lit) p.relations[size++] = { (char)punctuations[i], node1 };
+			}
+		if (!as.str_lit && as.numbers) 
+			for (int i = 0; i < arifmetic_size;i++)
+			{
+				p.relations[size++] = { (char)arifmetic[i], node2 };
+				if (!as.ubt_lit) p.relations[size++] = { (char)arifmetic[i], node1 };
 			}
 		return p;
 	}

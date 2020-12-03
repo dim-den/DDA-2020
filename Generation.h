@@ -65,7 +65,7 @@ namespace Gen
 		std::string GetType(IT::IDDATATYPE);
 		std::string GetOppositeCompareType(int);
 		IT::IDDATATYPE GenerateExpression(int pos);
-		void GenerateComparison(int& pos, int& condition_count, int& condtion_end);
+		void GenerateComparison(int& pos, std::stack<int>& condtion_count_pos, int& condition_count, int& condtion_end);
 		bool IsManyConditions(int pos);
 	};
 }

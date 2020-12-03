@@ -1,178 +1,178 @@
 Тест: без ошибок
 
  ------ ПРОТОКОЛ ------
- Дата: 01.12.20 17:21:05 
+ Дата: 03.12.20 17:49:43 
 
  ------ Параметры ------ 
 -log: log.txt
 -out: out.asm
--in:  in.txt
+-in:  course_in.txt
 -debug: 0
 
  ------ Таблица лексем ------ 
 
-001 tfi(ti,ti)
+001 tfi(ti)
 002 {
-003 dti;
-004 ?(ivlci)>i=iv(ivi);
-005 o(iclzicl)>i=ibi;
-006 o(icizivlcl)>i=ibivl;
-007 e>i=uivi;
-008 ri;
-009 }
-011 tfi(ti,ti)
-012 {
-013 ?(iclzicl)>pl;
-014 ?(icivi)>rl;
-015 rl;
-016 }
-018 m
-019 {
-020 dti;
-021 gi;
-022 ui;
-023 dti=l;
-024 dti;
-025 ?(i(i,i)cl)>pl;
-026 e>pl;
-027 dti=i(i,l);
-028 dti=l;
-029 dti=i[l];
-030 pi;
-031 dti=i(i,i);
-032 dti=i(i,l);
-033 pi;
-034 pi;
-035 dti=i;
-036 pi;
-037 rl;
-038 }
+003 dti=l;
+004 dti=l;
+005 dti=i(i);
+006 dti;
+007 dti;
+008 &iel.isui
+009 {
+010 ?(i[i]clzi[i]cl)
+011 {
+012 ?(icl)>rl;
+013 i[i]=i[i];
+014 ui;
+015 }
+016 o(i[i]cl)
+017 {
+018 ?(i(i)clzicl)>rl;
+019 i=l;
+020 ui;
+021 i=l;
+022 }
+023 e>rl;
+024 }
+025 ?(i(i)clzicl)>rl;
+026 rl;
+027 }
+029 m
+030 {
+031 dti;
+032 gi;
+033 ?(i(i)cl)
+034 {
+035 pl;
+036 rl;
+037 }
+038 pl;
+039 rl;
+040 }
 
  		------ Таблица идентификаторов ------ 
 
-Имя             Область видимости	Индекс	Тип		Тип данных	Значение
+Имя             Область видимости	Индекс	Тип			Тип данных	Значение
 strconcat       global_         	4096	function	bool		false
 strcopy         global_         	4097	function	bool		false
-fi              global_         	0002	function	number		0
-x               fi              	0005	parameter	number		0
-y               fi              	0008	parameter	number		0
-z               fi              	0013	variable	number		0
-lit_0           fi              	0019	literal		number		11
-lit_1           fi              	0038	literal		number		5
-lit_2           fi              	0042	literal		number		10
-lit_3           fi              	0059	literal		number		4
-lit_4           fi              	0061	literal		number		3
-lit_5           fi              	0070	literal		number		5
-IsRoot          global_         	0087	function	bool		false
-i               IsRoot          	0090	parameter	ubyte		0
-j               IsRoot          	0093	parameter	ubyte		0
-lit_6           IsRoot          	0100	literal		ubyte		57
-lit_7           IsRoot          	0104	literal		ubyte		48
-lit_8           IsRoot          	0108	literal		string		[5]число
-lit_9           IsRoot          	0120	literal		bool		true
-lit_10          IsRoot          	0123	literal		bool		false
-main            global_         	0126	function	number		0
-x               main            	0130	variable	number		0
-sa              main            	0140	variable	string		[0]
-lit_11          main            	0142	literal		string		[3]hey
-sb              main            	0146	variable	string		[0]
-lit_12          main            	0157	literal		bool		true
-lit_13          main            	0161	literal		string		[20]успешное копирование
-lit_14          main            	0166	literal		string		[29]скопировать строку не удалось
-res             main            	0170	variable	bool		false
-lit_15          main            	0176	literal		string		[18], you are welcome!
-ua              main            	0181	variable	ubyte		0
-lit_16          main            	0183	literal		ubyte		100
-ub              main            	0187	variable	ubyte		0
-lit_17          main            	0191	literal		number		3
-b               main            	0199	variable	bool		false
-z               main            	0210	variable	number		0
-lit_18          main            	0216	literal		number		29
-test            main            	0227	variable	number		0
-lit_19          main            	0235	literal		number		0
+strlength       global_         	4098	function	number		0
+ToNumber        global_         	4099	function	number		0
+CheckAddress    global_         	0002	function	bool		false
+address         CheckAddress    	0005	parameter	string		[0]
+octets          CheckAddress    	0010	variable	number		0
+lit_0           CheckAddress    	0012	literal		number		0
+numbers         CheckAddress    	0016	variable	number		0
+lit_1           CheckAddress    	0018	literal		number		0
+addressSize     CheckAddress    	0022	variable	ubyte		0
+buff            CheckAddress    	0031	variable	string		[0]
+i               CheckAddress    	0035	variable	ubyte		0
+lit_2           CheckAddress    	0040	literal		number		0
+lit_3           CheckAddress    	0054	literal		ubyte		57
+lit_4           CheckAddress    	0061	literal		ubyte		48
+lit_5           CheckAddress    	0068	literal		number		3
+lit_6           CheckAddress    	0072	literal		bool		false
+lit_7           CheckAddress    	0095	literal		ubyte		46
+lit_8           CheckAddress    	0105	literal		number		255
+lit_9           CheckAddress    	0109	literal		number		0
+lit_10          CheckAddress    	0113	literal		bool		false
+lit_11          CheckAddress    	0117	literal		number		0
+lit_12          CheckAddress    	0124	literal		string		[0]
+lit_13          CheckAddress    	0130	literal		bool		false
+lit_14          CheckAddress    	0140	literal		number		255
+lit_15          CheckAddress    	0144	literal		number		3
+lit_16          CheckAddress    	0148	literal		bool		false
+lit_17          CheckAddress    	0151	literal		bool		true
+main            global_         	0154	function	number		0
+ip              main            	0158	variable	string		[0]
+lit_18          main            	0170	literal		bool		false
+lit_19          main            	0174	literal		string		[30]Введен не правильный ip-адрес.
+lit_20          main            	0177	literal		number		-1
+lit_21          main            	0181	literal		string		[27]Введены верные данные сети!
+lit_22          main            	0184	literal		number		0
 
  ------ Таблица лексем ------ 
 
-001 tfi(ti,ti)
+001 tfi(ti)
 002 {
-003 dti;
-004 ?(ilvci)>i=iiivv__;
-005 o(iclzicl)>i=iib;
-006 o(icizilvcl)>i=iiblv;
-007 e>i=iuiv;
-008 ri;
-009 }
-011 tfi(ti,ti)
-012 {
-013 ?(iclzicl)>pl;
-014 ?(iciiv)>rl;
-015 rl;
-016 }
-018 m
-019 {
-020 dti;
-021 gi;
-022 iu;
-023 dti=l;
-024 dti;
-025 ?(ii@___cl)>pl;
-026 e>pl;
-027 dti=il@___;
-028 dti=l;
-029 dti=i[l];
-030 pi;
-031 dti=ii@___;
-032 dti=il@___;
-033 pi;
-034 pi;
-035 dti=i;
-036 pi;
-037 rl;
-038 }
+003 dti=l;
+004 dti=l;
+005 dti=i@__;
+006 dti;
+007 dti;
+008 &iel.isiu
+009 {
+010 ?(i[i]clzi[i]cl)
+011 {
+012 ?(icl)>rl;
+013 i[i]=i[i];
+014 iu;
+015 }
+016 o(i[i]cl)
+017 {
+018 ?(i@__clzicl)>rl;
+019 i=l;
+020 iu;
+021 i=l;
+022 }
+023 e>rl;
+024 }
+025 ?(i@__clzicl)>rl;
+026 rl;
+027 }
+029 m
+030 {
+031 dti;
+032 gi;
+033 ?(i@__cl)
+034 {
+035 pl;
+036 rl;
+037 }
+038 pl;
+039 rl;
+040 }
 
  		------ Таблица идентификаторов ------ 
 
-Имя             Область видимости	Индекс	Тип		Тип данных	Значение
+Имя             Область видимости	Индекс	Тип			Тип данных	Значение
 strconcat       global_         	4096	function	bool		false
 strcopy         global_         	4097	function	bool		false
-fi              global_         	0002	function	number		0
-x               fi              	0005	parameter	number		0
-y               fi              	0008	parameter	number		0
-z               fi              	0013	variable	number		0
-lit_0           fi              	0019	literal		number		11
-lit_1           fi              	0038	literal		number		5
-lit_2           fi              	0042	literal		number		10
-lit_3           fi              	0059	literal		number		4
-lit_4           fi              	0061	literal		number		3
-lit_5           fi              	0070	literal		number		5
-IsRoot          global_         	0087	function	bool		false
-i               IsRoot          	0090	parameter	ubyte		0
-j               IsRoot          	0093	parameter	ubyte		0
-lit_6           IsRoot          	0100	literal		ubyte		57
-lit_7           IsRoot          	0104	literal		ubyte		48
-lit_8           IsRoot          	0108	literal		string		[5]число
-lit_9           IsRoot          	0120	literal		bool		true
-lit_10          IsRoot          	0123	literal		bool		false
-main            global_         	0126	function	number		0
-x               main            	0130	variable	number		0
-sa              main            	0140	variable	string		[0]
-lit_11          main            	0142	literal		string		[3]hey
-sb              main            	0146	variable	string		[0]
-lit_12          main            	0157	literal		bool		true
-lit_13          main            	0161	literal		string		[20]успешное копирование
-lit_14          main            	0166	literal		string		[29]скопировать строку не удалось
-res             main            	0170	variable	bool		false
-lit_15          main            	0176	literal		string		[18], you are welcome!
-ua              main            	0181	variable	ubyte		0
-lit_16          main            	0183	literal		ubyte		100
-ub              main            	0187	variable	ubyte		0
-lit_17          main            	0191	literal		number		3
-b               main            	0199	variable	bool		false
-z               main            	0210	variable	number		0
-lit_18          main            	0216	literal		number		29
-test            main            	0227	variable	number		0
-lit_19          main            	0235	literal		number		0
-strcopy_0       global_         	0152	function	number		2
-strconcat_1     global_         	0174	function	number		2
-IsRoot_2        global_         	0203	function	number		2
-fi_3            global_         	0214	function	number		2
+strlength       global_         	4098	function	number		0
+ToNumber        global_         	4099	function	number		0
+CheckAddress    global_         	0002	function	bool		false
+address         CheckAddress    	0005	parameter	string		[0]
+octets          CheckAddress    	0010	variable	number		0
+lit_0           CheckAddress    	0012	literal		number		0
+numbers         CheckAddress    	0016	variable	number		0
+lit_1           CheckAddress    	0018	literal		number		0
+addressSize     CheckAddress    	0022	variable	ubyte		0
+buff            CheckAddress    	0031	variable	string		[0]
+i               CheckAddress    	0035	variable	ubyte		0
+lit_2           CheckAddress    	0040	literal		number		0
+lit_3           CheckAddress    	0054	literal		ubyte		57
+lit_4           CheckAddress    	0061	literal		ubyte		48
+lit_5           CheckAddress    	0068	literal		number		3
+lit_6           CheckAddress    	0072	literal		bool		false
+lit_7           CheckAddress    	0095	literal		ubyte		46
+lit_8           CheckAddress    	0105	literal		number		255
+lit_9           CheckAddress    	0109	literal		number		0
+lit_10          CheckAddress    	0113	literal		bool		false
+lit_11          CheckAddress    	0117	literal		number		0
+lit_12          CheckAddress    	0124	literal		string		[0]
+lit_13          CheckAddress    	0130	literal		bool		false
+lit_14          CheckAddress    	0140	literal		number		255
+lit_15          CheckAddress    	0144	literal		number		3
+lit_16          CheckAddress    	0148	literal		bool		false
+lit_17          CheckAddress    	0151	literal		bool		true
+main            global_         	0154	function	number		0
+ip              main            	0158	variable	string		[0]
+lit_18          main            	0170	literal		bool		false
+lit_19          main            	0174	literal		string		[30]Введен не правильный ip-адрес.
+lit_20          main            	0177	literal		number		-1
+lit_21          main            	0181	literal		string		[27]Введены верные данные сети!
+lit_22          main            	0184	literal		number		0
+strlength_0     global_         	0025	function	number		0
+ToNumber_1      global_         	0101	function	number		0
+ToNumber_2      global_         	0136	function	number		0
+CheckAddress_3  global_         	0166	function	number		0

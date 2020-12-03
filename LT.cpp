@@ -1,6 +1,7 @@
 #include "LT.h"
 
 using namespace std;
+
 namespace LT
 {
 	LexTable::LexTable(int size) : maxsize(size) {
@@ -46,7 +47,9 @@ namespace LT
 			{
 				if (lexem == "\n") continue;
 				int symbol_code = LexDefinition(lexem);
-				if (symbol_code < 0) errors.push(ERROR_THROW_IN(120, row, col));
+				if (symbol_code < 0) {
+					cout << '\"' << lexem << '\"' << endl;errors.push(ERROR_THROW_IN(120, row, col));
+				}
 				else
 				{
 					LT::Entry entry;
@@ -138,63 +141,75 @@ namespace LT
 		if (!errors.empty()) throw errors;
 	}
 
-	std::vector<std::string> LexTable::SeparateLexems(std::string& line) {
+	std::vector<std::string> LexTable::SeparateLexems(std::string& line) 
+	{
 		vector<string> res;
 		string lexem;
 		bool str_lit = false;
+		bool char_lit = false;
 		int pos_str_lit = 0;
 		if (line[0] != IN_CODE_SEPARATOR)
 		{
-			for (int i = 0; i < line.size() - 1; i++) 
+			for (int i = 0; i < line.size() - 1; i++)
 			{
 				if (str_lit && line[i] != LEX_QUOTE) lexem += line[i];
+				else if (char_lit && line[i] != '\'') lexem += line[i];
 				else if (line[i] == IN_CODE_SPACE) 
 				{
-					res.push_back(lexem);
-					lexem = "";
+					if (lexem != "") res.push_back(move(lexem));
 				}
-				else if (line[i] == LEX_QUOTE) 
+				else if (line[i] == LEX_QUOTE)
 				{
-					if (str_lit) {
-						lexem += LEX_QUOTE;
-						res.push_back(lexem);
-						lexem = "";
+					lexem += LEX_QUOTE;
+					if (str_lit) {						
+						res.push_back(move(lexem));
 						str_lit = false;
 					}
 					else {
-						lexem += LEX_QUOTE;
 						pos_str_lit = res.size();
 						str_lit = true;
 					}
 				}
+				else if (line[i] == '\'')
+				{
+					lexem += line[i];
+					if (char_lit) {
+						res.push_back(move(lexem));
+						char_lit = false;
+					}
+					else char_lit = true;
+				}
 				else if (In::is_expr(line[i]))
 				{
-					if (!lexem.empty()) res.push_back(lexem);
+					if (!lexem.empty()) res.push_back(move(lexem));
 					string s; s = line[i];
-					if (line[i] != LEX_RIGHTHESIS && line[i + 1] == LEX_ASSIGN && line[i + 2] != LEX_ASSIGN)
+					if (line[i] != LEX_RIGHTHESIS && line[i] != LEX_RIGHTBRACKET && line[i + 1] == LEX_ASSIGN && line[i + 2] != LEX_ASSIGN)
 					{
-						s += '=';
+						s += line[i + 1];
 						res.push_back(s);
 						i++;
 					}
 					else if (line[i] == LEX_ASSIGN && line[i + 1] == '>')
 					{
-						s += '>';
+						s += line[i + 1];
 						res.push_back(s);
 						i++;
 					}
-					else if ((line[i] == '+' && line[i + 1] == '+') || (line[i] == '-' && line[i + 1] == '-'))
+					else if ((line[i] == '-' && line[i - 1] == LEX_ASSIGN) || (line[i] == '-' && line[i - 1] == 'n' && line[i - 2] == 'r' && line[i - 3] == 'u'))
+					{
+						lexem += line[i];
+					}
+					else if ((line[i] == '+' && line[i + 1] == '+') || (line[i] == '-' && line[i + 1] == '-') || (line[i] == '.' && line[i + 1] == '.'))
 					{
 						s += line[i + 1];
 						res.push_back(s);
 						i++;
 					}
 					else res.push_back(s);
-					lexem = "";
 				}
 				else lexem += line[i];
 			}
-			if (!lexem.empty()) res.push_back(lexem);
+			if (!lexem.empty()) res.push_back(move(lexem));
 		}
 		else res.push_back("\n");
 		if (str_lit) res[pos_str_lit] = "_";
@@ -238,6 +253,7 @@ namespace LT
 			return ID.Add(ent);
 		}
 		if (idtype != IT::IDTYPE::N || iddatatype != IT::IDDATATYPE::NONE) { // идентификатор должен быть уникальным
+
 			if (idtype == IT::IDTYPE::F) {
 				idtype = IT::IDTYPE::P;
 				if (space_name == LEX_GLOBAL) space_name = input;
@@ -305,7 +321,7 @@ namespace LT
 		std::stack<IT::Entry> called_func;	// стек вызовов функций
 		LT::Entry entry = table[lt_pos];
 		int length = 0, opened_hesis = 0;
-		while (table[lt_pos + length].lexema != LEX_SEMICOLON && table[lt_pos + length].lexema != LEX_CONDITION && table[lt_pos + length].lexema != LEX_COMPOP)
+		while (table[lt_pos + length].lexema != LEX_SEMICOLON && table[lt_pos + length].lexema != LEX_CONDITION && table[lt_pos + length].lexema != LEX_COMPOP && table[lt_pos + length].lexema != LEX_TO && table[lt_pos + length].lexema != LEX_LEFTBRACE)
 		{
 			if (table[lt_pos + length].lexema == LEX_LEFTHESIS) opened_hesis++;
 			else if (table[lt_pos + length].lexema == LEX_RIGHTHESIS) opened_hesis--;

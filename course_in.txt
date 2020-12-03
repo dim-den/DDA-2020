@@ -1,81 +1,40 @@
 bool function CheckAddress(string address)
 {
-	number octets = 0;
-	number numbers = 0;
-	ubyte address_size = strlen(address);
-	string buff;
-	ubyte i = 0;
-	for i in 0..address_size step i++
+	def number octets = 0;
+	def number numbers = 0;	
+	def ubyte addressSize = strlength(address);
+	def string buff;
+	def ubyte i;
+	for i in 0..addressSize step ++i
 	{
-		if(address <= '9' and address[i] >= '0')
-		{
-			if(numbers>3) => return false;
-			buff[numbers++] = address[i];
-		}
-		elif(address[i] == '.' or i == address_size)
-		{
-			if(ToNumber(buff) > 255 or numbers == 0) => return false;
-			numbers = 0;
-			octets++;
-			buff = "";
-		}
-		else => return false;
-	} 
-	if(octets != 4) => return false;
-	return true;
-}
-
-bool function CheckMask(string mask)
-{
-	number octets = 0;
-	number numbers = 0;
-	number numb = 0;
-	number prev_number = 256;
-	ubyte mask_size = strlen(mask);
-	string buff;
-	ubyte i = 0;
-	for i in 0..mask_size step i++
-	{
-		if(address[i] <= '9' and address[i] >= '0') 
+		if(address[i] <= '9' and address[i] >= '0')
 		{
 			if(numbers>3) => return false;
 			buff[numbers] = address[i];
-			numbers++;
+			++numbers;
 		}
-		elif(address[i] == '.' or i == mask_size - 1)
+		elif(address[i] == '.')
 		{
-			numb = ToNumber(buff);
-			if(numb > 255) => return false;
-			elif (prev_number < 255 && numb != 0) => return false;
-			elif (octets == 0 and number == 0) => return false;
-			elif (numb != 0 and numb != 128 and numb != 192 and numb != 224 and numb != 240 and numb != 248 and numb != 252 and numb != 254 and numb != 255)) => return false;
-			prev_number = numb;
+			if(ToNumber(buff) > 255 or numbers == 0) => return false;
 			numbers = 0;
-			octets++;
+			++octets;
 			buff = "";
 		}
 		else => return false;
 	} 
-	if(octets != 4) => return false;
+	if(ToNumber(buff) > 255 or octets != 3) => return false;
 	return true;
 }
 
 main
 {
-	string ip;
+	def string ip;
 	get ip;
 	if(CheckAddress(ip) == false)
 	{
-		print("Введен неверный ip-адрес. Выход из программы.");
+		print "������ �� ���������� ip-�����.";
 		return -1;
 	}
-	string mask;
-	get mask;
-	if(CheckMask(ip) != true)
-	{
-		print("Введена неверная маска сети. Выход из программы.");
-		return -2;
-	}
-	print("Введены верные данные сети!");
+	print "������� ������ ������ ����!";
 	return 0;
 }

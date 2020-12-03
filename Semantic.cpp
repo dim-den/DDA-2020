@@ -1,4 +1,4 @@
-#include "Semantic.h"
+п»ї#include "Semantic.h"
 
 namespace SEM
 {
@@ -6,7 +6,9 @@ namespace SEM
 
 	void Semantic::Analysis()
 	{
+
 		CheckParameters();
+
 		CheckExprTypes();
 		if (!errors.empty()) throw errors;
 	}
@@ -22,7 +24,7 @@ namespace SEM
 			for (int i = pos + 1; LexTable.GetEntry(i).lexema != LEX_RIGHTHESIS; i++)
 			{
 				LT::Entry entry = LexTable.GetEntry(i);
-				if (entry.lexema == LEX_ID || entry.lexema == LEX_LITERAL)	// если параметр функции
+				if (entry.lexema == LEX_ID || entry.lexema == LEX_LITERAL)	// ГҐГ±Г«ГЁ ГЇГ Г°Г Г¬ГҐГІГ° ГґГіГ­ГЄГ¶ГЁГЁ
 				{
 					if (count_param < expected_params.size())
 					{
@@ -45,25 +47,27 @@ namespace SEM
 			entry = LexTable.GetEntry(i);
 			switch (entry.lexema)
 			{
-			case LEX_ASSIGN:		// проверка оператора присваивания
-				expected_type = IdTable.GetEntry(LexTable.GetEntry(i - 1).idxTI).iddatatype;
+			case LEX_ASSIGN:		// РїСЂРѕРІРµСЂРєР° РѕРїРµСЂР°С‚РѕСЂР° РїСЂРёСЃРІР°РёРІР°РЅРёСЏ
+				if (LexTable.GetEntry(i - 1).lexema == LEX_ID)	expected_type = IdTable.GetEntry(LexTable.GetEntry(i - 1).idxTI).iddatatype;
+				else expected_type = IT::UBYTE;
 				if (expected_type == IT::IDDATATYPE::UBYTE) expected_type = IT::IDDATATYPE::NUMB;
 				res = GetExprType(i + 1);
 				if (res == IT::IDDATATYPE::UBYTE) res = IT::IDDATATYPE::NUMB;
 				if (expected_type != res) errors.push(ERROR_THROW_L(210, entry.sn));
 				break;
-			case LEX_CONDITION:		// проверка условия (левого и правого операнда)
+			case LEX_CONDITION:		// РїСЂРѕРІРµСЂРєР° СѓСЃР»РѕРІРёСЏ (Р»РµРІРѕРіРѕ Рё РїСЂР°РІРѕРіРѕ РѕРїРµСЂР°РЅРґР°)
+
 				left_begin = i;
-				for (;(LexTable.GetEntry(left_begin).lexema != LEX_IF) && (LexTable.GetEntry(left_begin).lexema != LEX_ELIF) && (LexTable.GetEntry(left_begin).lexema != LEX_COMPOP);left_begin--) {} // находим крайнее левое положение
+				for (;(LexTable.GetEntry(left_begin).lexema != LEX_IF) && (LexTable.GetEntry(left_begin).lexema != LEX_ELIF) && (LexTable.GetEntry(left_begin).lexema != LEX_COMPOP);left_begin--) {} // РЅР°С…РѕРґРёРј РєСЂР°Р№РЅРµРµ Р»РµРІРѕРµ РїРѕР»РѕР¶РµРЅРёРµ
 				if (LexTable.GetEntry(left_begin).lexema == LEX_COMPOP) left_begin--;
 				if (GetExprType(left_begin + 2) != GetExprType(i + 1)) errors.push(ERROR_THROW_L(211, entry.sn));
 				break;
-			case LEX_RETURN:		// соответсвие возвращаемого значения
+			case LEX_RETURN:		// СЃРѕРѕС‚РІРµС‚СЃРІРёРµ РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ
 				pos = i;
 				for (;(LexTable.GetEntry(pos).lexema != LEX_ID) && (LexTable.GetEntry(pos).lexema != LEX_LITERAL); pos++) {}
 
 				for (int k = 0; k < IdTable.Size(); k++)
-					if (std::strcmp(IdTable.GetEntry(k).id, IdTable.GetEntry(LexTable.GetEntry(pos).idxTI).spacename) == 0)		// ищем в таблице функцию из которой выходим
+					if (std::strcmp(IdTable.GetEntry(k).id, IdTable.GetEntry(LexTable.GetEntry(pos).idxTI).spacename) == 0)		// РёС‰РµРј РІ С‚Р°Р±Р»РёС†Рµ С„СѓРЅРєС†РёСЋ РёР· РєРѕС‚РѕСЂРѕР№ РІС‹С…РѕРґРёРј
 						if (GetExprType(i + 1) != IdTable.GetEntry(k).iddatatype)
 						{
 							errors.push(ERROR_THROW_L(203, entry.sn));
@@ -88,7 +92,7 @@ namespace SEM
 
 	IT::IDDATATYPE Semantic::GetExprType(int pos)
 	{
-		expr_pos.push_back(pos); // запоминаем позицию выражения ( для польской нотации)
+		expr_pos.push_back(pos); // Р·Р°РїРѕРјРёРЅР°РµРј РїРѕР·РёС†РёСЋ РІС‹СЂР°Р¶РµРЅРёСЏ ( РґР»СЏ РїРѕР»СЊСЃРєРѕР№ РЅРѕС‚Р°С†РёРё)
 		LT::Entry lt_entry = LexTable.GetEntry(pos);
 		IT::Entry it_entry;
 		IT::IDDATATYPE datatype = IT::IDDATATYPE::NONE, expected_type = IT::IDDATATYPE::NONE;
@@ -100,11 +104,14 @@ namespace SEM
 				expected_type = it_entry.iddatatype;
 				if (CheckIndex(it_entry, pos)) expected_type = IT::UBYTE;
 				if (datatype == IT::IDDATATYPE::NONE) datatype = expected_type;
-				else if (expected_type != datatype) errors.push(ERROR_THROW_L(209, lt_entry.sn));
+				else if (expected_type != datatype)
+				{
+					if(!(expected_type == IT::NUMB && datatype == IT::UBYTE) && !(expected_type == IT::UBYTE && datatype == IT::NUMB)) errors.push(ERROR_THROW_L(209, lt_entry.sn));
+				}
 
-				if (it_entry.idtype == IT::IDTYPE::F) for (;LexTable.GetEntry(pos).lexema != LEX_RIGHTHESIS;pos++) {} // игнорируем параметры вызова функции
+				if (it_entry.idtype == IT::IDTYPE::F) for (;LexTable.GetEntry(pos).lexema != LEX_RIGHTHESIS;pos++) {} // РёРіРЅРѕСЂРёСЂСѓРµРј РїР°СЂР°РјРµС‚СЂС‹ РІС‹Р·РѕРІР° С„СѓРЅРєС†РёРё
 			}
-			else if (((lt_entry.lexema == LEX_ARIFMETIC) || (lt_entry.lexema == LEX_BYTEOP) || (lt_entry.lexema == LEX_UNARY)) && datatype == IT::STR) // недопустмы арифмитические операции над string
+			else if (((lt_entry.lexema == LEX_ARIFMETIC) || (lt_entry.lexema == LEX_BYTEOP) || (lt_entry.lexema == LEX_UNARY)) && datatype == IT::STR) // РЅРµРґРѕРїСѓСЃС‚РјС‹ Р°СЂРёС„РјРёС‚РёС‡РµСЃРєРёРµ РѕРїРµСЂР°С†РёРё РЅР°Рґ string
 				errors.push(ERROR_THROW_L(212, lt_entry.sn));
 		}
 		return datatype;
@@ -113,7 +120,7 @@ namespace SEM
 	std::vector<IT::IDDATATYPE> Semantic::GetExpectedParams(const LT::Entry& lt_entry, const IT::Entry& it_entry)
 	{
 		std::vector<IT::IDDATATYPE> expected_params;
-		if (it_entry.idxfirstLE < TI_MAXSIZE) // если обычная функция
+		if (it_entry.idxfirstLE < TI_MAXSIZE) // РµСЃР»Рё РѕР±С‹С‡РЅР°СЏ С„СѓРЅРєС†РёСЏ
 		{
 			for (int i = it_entry.idxfirstLE + 1; LexTable.GetEntry(i).lexema != LEX_RIGHTHESIS; i++)
 			{
@@ -121,7 +128,7 @@ namespace SEM
 				if (entry.lexema == LEX_ID) expected_params.push_back(IdTable.GetEntry(entry.idxTI).iddatatype);
 			}
 		}
-		else expected_params = IT::GetSTDLib()[it_entry.idxfirstLE - TI_MAXSIZE].params; // если фунция стандартной библиотек		
+		else expected_params = IT::GetSTDLib()[it_entry.idxfirstLE - TI_MAXSIZE].params; // РµСЃР»Рё С„СѓРЅС†РёСЏ СЃС‚Р°РЅРґР°СЂС‚РЅРѕР№ Р±РёР±Р»РёРѕС‚РµРє		
 		return expected_params;
 	}
 

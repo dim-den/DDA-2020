@@ -10,9 +10,50 @@ number function fi(number x, number y)
 
 bool function IsRoot(ubyte i, ubyte j)
 {
+	def number sum = -6;
 	if( i <= '9' and i >= '0') => print "число";
+	for i in 0..99 step ++i
+	{
+	  sum = sum + 1;
+	}
+	print sum;
 	if(j == i * i) => return true;
  	return false;
+}
+
+bool function CheckMask(string mask)
+{
+	def number octets = 0;
+	def number numbers = 0;
+	def number numb = 0;
+	def number prevNumber = 256;
+	def ubyte maskSize = strlength(mask);
+	def string buff;
+	def ubyte i;
+	for i in 0..maskSize step ++i
+	{
+		if(mask[i] <= '9' and mask[i] >= '0') 
+		{
+			if(numbers>3) => return false;
+			buff[numbers] = mask[i];
+			++numbers;
+		}
+		elif(mask[i] == '.' or i == maskSize - 1)
+		{
+			numb = ToNumber(buff);
+			if(numb > 255) => return false;
+			elif (prevNumber < 255 and numb != 0) => return false;
+			elif (octets == 0 and numb == 0) => return false;
+			elif (numb != 0 and numb != 128 and numb != 192 and numb != 224 and numb != 240 and numb != 248 and numb != 252 and numb != 254 and numb != 255) => return false;
+			prevNumber = numb;
+			numbers = 0;
+			++octets;
+			buff = "";
+		}
+		else => return false;
+	} 
+	if(octets != 4) => return false;
+	return true;
 }
 
 main
