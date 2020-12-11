@@ -6,6 +6,7 @@
 
 int FST_TRACE_n = -1;
 char rbuf[205], sbuf[205], lbuf[1024];
+extern bool DEBUG_MODE;
 
 namespace MFST
 {
@@ -47,11 +48,10 @@ namespace MFST
 		lenta_position(0)
 		{}
 
-	Mfst::Mfst(LT::LexTable& plex, GRB::Greibach pgreibach, bool debug) 
+	Mfst::Mfst(LT::LexTable& plex, GRB::Greibach pgreibach) 
 	{
 		greibach = pgreibach;
 		lex = plex;
-		debug_mode = debug;
 		lenta = new short[lenta_size = lex.Size()];
 		for (int k = 0; k < lenta_size; k++)
 			lenta[k] = TS(lex.GetEntry(k).lexema);
@@ -182,7 +182,7 @@ namespace MFST
 			break;
 		case MFST::Mfst::LENTA_END:
 			MFST_TRACE4("----->LENTA_END")
-			if (debug_mode) {
+			if (DEBUG_MODE) {
 				std::cout << "---------------------------------------------------------------------------------------------" << std::endl;
 				std::cout << std::setw(4) << std::left << "0: всего строк всего строк в таблице лексем " << lenta_size << ", синтаксический анализ выполнен без ошибок" << std::endl;
 			}

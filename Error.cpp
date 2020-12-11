@@ -34,8 +34,7 @@ namespace Error
 	ERROR_ENTRY(125, "Ошибка при добавлении в таблицу идентификаторов (превышен максимальный размер)"),
 	ERROR_ENTRY(126, "Ошибка при получении строки таблицы идентификаторов (нет элемента)"),
 	ERROR_ENTRY(127, "Превышен максимальный размер строки"),
-	ERROR_ENTRY(128, "Ошибка построения выражения"),
-	ERROR_ENTRY_NODEF(129),
+	ERROR_ENTRY_NODEF(128), ERROR_ENTRY_NODEF(129),
 	ERROR_ENTRY_NODEF10(130), ERROR_ENTRY_NODEF10(140), ERROR_ENTRY_NODEF10(150),
 	ERROR_ENTRY_NODEF10(160), ERROR_ENTRY_NODEF10(170), ERROR_ENTRY_NODEF10(180), ERROR_ENTRY_NODEF10(190),
 	ERROR_ENTRY(200,"Функция main должна быть уникальна"), 
@@ -51,10 +50,11 @@ namespace Error
 	ERROR_ENTRY(210,"Тип присваемого значения не соответствует типу идентификатора"),
 	ERROR_ENTRY(211,"Сравнение разных типов данных"),
 	ERROR_ENTRY(212,"Недопустимо использование арифметических операций над типом string"),
-	ERROR_ENTRY(213,"Индексация возможно только к типу string"),
+	ERROR_ENTRY(213,"Индексация допустима только к типу string"),
 	ERROR_ENTRY(214,"Индекс должен иметь целочисленный тип" ),
-	ERROR_ENTRY_NODEF(215),
-	ERROR_ENTRY_NODEF(216),ERROR_ENTRY_NODEF(217),ERROR_ENTRY_NODEF(218),ERROR_ENTRY_NODEF(219),
+	ERROR_ENTRY(215,"Переменная цикла должна иметь целочисленный тип"),	
+	ERROR_ENTRY(216,"Диапазон цикла должен иметь целочисленный тип"),
+	ERROR_ENTRY_NODEF(217),ERROR_ENTRY_NODEF(218),ERROR_ENTRY_NODEF(219),
 	ERROR_ENTRY_NODEF10(220), ERROR_ENTRY_NODEF10(230),ERROR_ENTRY_NODEF10(240),ERROR_ENTRY_NODEF10(250),
 	ERROR_ENTRY_NODEF10(260),ERROR_ENTRY_NODEF10(270),ERROR_ENTRY_NODEF10(280),ERROR_ENTRY_NODEF10(290),
 	ERROR_ENTRY_NODEF100(300), ERROR_ENTRY_NODEF100(400), ERROR_ENTRY_NODEF100(500),
@@ -66,22 +66,28 @@ namespace Error
 	ERROR_ENTRY(605, "Ошибка в арифметическом выражении"),
 	ERROR_ENTRY(606, "Ошибка в условном операторе"), 
 	ERROR_ENTRY(607, "Ошибка в условной конструкции"),
-	ERROR_ENTRY(608, "Неверные операторы в блоке условия"),
-	ERROR_ENTRY(609, "Ошибква в индексе"),
-	ERROR_ENTRY_NODEF10(610),ERROR_ENTRY_NODEF10(620),ERROR_ENTRY_NODEF10(630),ERROR_ENTRY_NODEF10(640),
+	ERROR_ENTRY(608, "Ошибка в операторах тела условной конструкции"),
+	ERROR_ENTRY(609, "Ошибка в индексе"),
+	ERROR_ENTRY(610, "Ошибка в аргументах диапазона цикла"),
+	ERROR_ENTRY(611, "Ошибка в шаге цикла"),
+	ERROR_ENTRY(612, "Ошибка в теле цикла"),
+	ERROR_ENTRY(613, "Ошибка в операторах после тела цикла или условия"),
+	ERROR_ENTRY_NODEF(614),ERROR_ENTRY_NODEF(615),ERROR_ENTRY_NODEF(616),
+	ERROR_ENTRY_NODEF(617),ERROR_ENTRY_NODEF(618),ERROR_ENTRY_NODEF(619),
+	ERROR_ENTRY_NODEF10(620),ERROR_ENTRY_NODEF10(630),ERROR_ENTRY_NODEF10(640),
 	ERROR_ENTRY_NODEF10(650),ERROR_ENTRY_NODEF10(660),ERROR_ENTRY_NODEF10(670),ERROR_ENTRY_NODEF10(680),
 	ERROR_ENTRY_NODEF10(690),ERROR_ENTRY_NODEF100(700), ERROR_ENTRY_NODEF100(800), ERROR_ENTRY_NODEF100(900)
 	};
 
-	ERROR geterror(int id)
+	ERROR GetError::error(int id)
 	{
 		ERROR err;
 		if (id < 0 || id >= ERROR_MAX_ENTRY) err = errors[0];
 		else err = errors[id];
 		return err;
-	}
+	};
 
-	ERROR geterrorl(int id, int line = -1)
+	ERROR GetError::error(int id, int line)
 	{
 		ERROR err;
 		if (id < 0 || id >= ERROR_MAX_ENTRY) id = 0;
@@ -91,7 +97,7 @@ namespace Error
 		return err;
 	}
 
-	ERROR geterrorin(int id, int line = -1, int col = -1)
+	ERROR GetError::error(int id, int line, int col)
 	{
 		ERROR err;
 		if (id < 0 || id >= ERROR_MAX_ENTRY) id = 0;
@@ -100,4 +106,5 @@ namespace Error
 		err.inext = { line, col };
 		return err;
 	}
+
 }

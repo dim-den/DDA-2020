@@ -2,10 +2,10 @@ bool function CheckAddress(string address)
 {
 	def number octets = 0;
 	def number numbers = 0;	
-	def ubyte addressSize = strlength(address);
+	def ubyte length = strlength(address);
 	def string buff;
 	def ubyte i;
-	for i in 0..addressSize step ++i
+	for i in 0..length step ++i
 	{
 		if(address[i] <= '9' and address[i] >= '0')
 		{
@@ -15,26 +15,34 @@ bool function CheckAddress(string address)
 		}
 		elif(address[i] == '.')
 		{
-			if(ToNumber(buff) > 255 or numbers == 0) => return false;
+			if(ToNumber(buff) > 255 or numbers == 0) => return false ;
 			numbers = 0;
 			++octets;
-			buff = "";
+			if(strcopy(buff,"") == false) => return false;
 		}
 		else => return false;
 	} 
-	if(ToNumber(buff) > 255 or octets != 3) => return false;
+	if(ToNumber(buff) > 255 or octets != 3 or numbers == 0) => return false;
 	return true;
 }
 
 main
 {
 	def string ip;
+	print "¬ведите ip-адрес: ";
 	get ip;
 	if(CheckAddress(ip) == false)
 	{
 		print "¬веден не правильный ip-адрес.";
 		return -1;
 	}
-	print "¬ведены верные данные сети!";
+	else => print "¬ведены верные данные сети!";
+	def string mask;
+	print "¬ведите маску сети:";
+	get mask;
+	def bool res = strconcat(ip, "/") & strconcat(ip, mask);
+	if(res == true) => print ip;
+	def number value = 015;
+	print ~value &  ToNumber(mask) | 3;
 	return 0;
 }

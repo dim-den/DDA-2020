@@ -2,6 +2,7 @@
 #include "Error.h"
 #include "GRB.h"
 #include "LT.h"
+#include "Parm.h"
 #include <stack>
 #include <iomanip>
 #define MFST_DIAGN_MAXSIZE 2*ERROR_MAXSIZE_MESSAGE
@@ -9,36 +10,36 @@
 
 typedef std::stack<short> MFSTSTSTACK;	// стек автомата
 
-#define MFST_TRACE_START if(debug_mode) std::cout << std::setw(4) << std::setfill(' ') << std::left << "Шаг: " \
+#define MFST_TRACE_START if(DEBUG_MODE) std::cout << std::setw(4) << std::setfill(' ') << std::left << "Шаг: " \
 								   << std::setw(20) << std::left << " Правило" \
 								   << std::setw(30) << std::left << " Входная лента" \
 								   << std::setw(20) << std::left << " Стек" \
 								   << std::endl;
 
-#define MFST_TRACE1 if(debug_mode) std::cout << std::setw(4) << std::left << ++FST_TRACE_n << ": " \
+#define MFST_TRACE1 if(DEBUG_MODE) std::cout << std::setw(4) << std::left << ++FST_TRACE_n << ": " \
 	<< std::setw(20) << std::left << rule.getCRule(rbuf, nrulechain)  \
 	<< std::setw(30) << std::left << getCLenta(lbuf, lenta_position) \
 	<< std::setw(20) << std::left << getCSt(sbuf) \
 	<< std::endl;
 
-#define MFST_TRACE2 if(debug_mode) std::cout << std::setw(4) << std::left << FST_TRACE_n << ": " \
+#define MFST_TRACE2 if(DEBUG_MODE) std::cout << std::setw(4) << std::left << FST_TRACE_n << ": " \
 	<< std::setw(20) << std::left << " "  \
 	<< std::setw(30) << std::left << getCLenta(lbuf, lenta_position) \
 	<< std::setw(20) << std::left << getCSt(sbuf) \
 	<< std::endl;
 
-#define MFST_TRACE3 if(debug_mode) std::cout << std::setw(4) << std::left << ++FST_TRACE_n << ": " \
+#define MFST_TRACE3 if(DEBUG_MODE) std::cout << std::setw(4) << std::left << ++FST_TRACE_n << ": " \
 	<< std::setw(20) << std::left << " "  \
 	<< std::setw(30) << std::left << getCLenta(lbuf, lenta_position) \
 	<< std::setw(20) << std::left << getCSt(sbuf) \
 	<< std::endl;
 
-#define MFST_TRACE4(c) if(debug_mode) std::cout << std::setw(4) << std::left << ++FST_TRACE_n << ": " << std::setw(20) << std::left << c << std::endl;
-#define MFST_TRACE5(c) if(debug_mode) std::cout << std::setw(4) << std::left <<   FST_TRACE_n << ": " << std::setw(20) << std::left << c << std::endl;
+#define MFST_TRACE4(c) if(DEBUG_MODE) std::cout << std::setw(4) << std::left << ++FST_TRACE_n << ": " << std::setw(20) << std::left << c << std::endl;
+#define MFST_TRACE5(c) if(DEBUG_MODE) std::cout << std::setw(4) << std::left <<   FST_TRACE_n << ": " << std::setw(20) << std::left << c << std::endl;
 
-#define MFST_TRACE6(c,k) if(debug_mode) std::cout << std::setw(4) << std::left << ++FST_TRACE_n << ": " << std::setw(20) << std::left << c << k << std::endl;
+#define MFST_TRACE6(c,k) if(DEBUG_MODE) std::cout << std::setw(4) << std::left << ++FST_TRACE_n << ": " << std::setw(20) << std::left << c << k << std::endl;
 
-#define MFST_TRACE7 if(debug_mode) std::cout << std::setw(4) << std::left << state.lenta_position << ": " \
+#define MFST_TRACE7 if(DEBUG_MODE) std::cout << std::setw(4) << std::left << state.lenta_position << ": " \
 	<< std::setw(20) << std::left << rule.getCRule(rbuf, state.nrulechain) \
 	<< std::endl;
 
@@ -102,12 +103,10 @@ namespace MFST
 		LT::LexTable lex;					// результат лексического анализа
 		MFSTSTSTACK st;						// стек автомата
 		std::stack<MfstState> storestate;	// стек для сохранения состояний
-		bool debug_mode;					// вывод промежуточной ифнормации в консоль
 		Mfst();
 		Mfst(
 			LT::LexTable& plex,				// результа лексического анализа
-			GRB::Greibach pgreibach,		// грамматика Грейбаха
-			bool debug						// вывод промежуточной ифнормации в консоль
+			GRB::Greibach pgreibach			// грамматика Грейбаха
 		);
 		char* getCSt(char* buf);			// получить содержимое стека
 		char* getCLenta(char* buf, short pos, short n = 25);	// лента: n символов с pos

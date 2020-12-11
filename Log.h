@@ -26,6 +26,7 @@ namespace Log
 		void WriteLexTable(LT::LexTable& lextable);
 		void WriteIdTable(IT::IdTable& idtable);
 		void WriteErrors(std::queue<Error::ERROR>& errors);
+		void WriteResultTime(size_t lex_time, size_t synt_time, size_t sem_time, size_t gen_time, size_t overall);
 		LOG& operator=(Log::LOG&& rhs) noexcept;
 		~LOG();
 	private:

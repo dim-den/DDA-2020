@@ -61,7 +61,7 @@
 #define LEX_COMP_AND	'z'
 #define LEX_COMP_OR		'z'
 #define LEX_FOR			'&'
-#define LEX_IN			'e'
+#define LEX_IN			'j'
 #define LEX_STEP		's'
 #define LEX_DOTES		'.'
 #define LEX_QUOTE       '\"'
@@ -94,22 +94,17 @@ namespace LT // таблица лексем
 		LexTable(int size);
 		void Add(Entry entry);
 		Entry& GetEntry(int n) const;
-		void LexAnalysis(unsigned char* text, IT::IdTable& ID);													 // обработка входного файлаа и создание таблицы лексем и идентификаторов
-		std::vector<std::string> SeparateLexems(std::string& line);												 // разделение элементов языка
-		int AddId(IT::IdTable& ID, std::string& input, IT::IDDATATYPE& iddatatype, IT::IDTYPE& idtype, int idx, std::string& space_name); // добавление элемента в таблицу идентификаторрв
+		void LexAnalysis(unsigned char* text, IT::IdTable& ID);																					 // обработка входного файлаа и создание таблицы лексем и идентификаторов
+		std::vector<std::string> SeparateLexems(std::string& line);																					 // разделение элементов языка
+		int AddId(IT::IdTable& ID, std::string& input, IT::IDDATATYPE& iddatatype, IT::IDTYPE& idtype, int idx, std::string& space_name);			 // добавление элемента в таблицу идентификаторрв
 		int AddLit(IT::IdTable& ID, int& lit_count, int idx, int value, std::string& space_name, IT::IDDATATYPE iddatatype, std::string data);
-		int LexDefinition(std::string input);																	 // производит анализ входной цепочки, возвращает номер элемента в таблице avail_lexems, если элемента нет возвращает -1
-		void PolishNotation(IT::IdTable& ID, int lt_pos, int& func_call_count);									 // построение польской записи для выражения
+		int LexDefinition(const std::string& input);																										// анализ входной цепочки, возвращает номер элемента, иначе -1
+		void PolishNotation(IT::IdTable& ID, int lt_pos, int& func_call_count);																		 // построение польской записи для выражения
 		void BuildPolish(IT::IdTable& ID, const std::vector<int>& expr_pos);
 		int Size() const;
+		static bool IsExprEnd(char symb);
 		std::vector<int> GetFuncCallPos() const;
-		void operator=(const LexTable& rhs) {
-			maxsize = rhs.maxsize;
-			size = rhs.size;
-			table = new Entry[size];
-			for (int i = 0;i < size;i++)
-				table[i] = rhs.table[i];
-		}
+		void operator=(const LexTable& rhs);
 		~LexTable();
 
 	private:
@@ -119,7 +114,7 @@ namespace LT // таблица лексем
 
 		std::vector<int> func_call_pos;
 		std::vector<int> assign_pos;
-
+	
 		const char avail_lexems[LEX_COUNT] = 
 		{
 			LEX_NUMBER, LEX_STRING, LEX_UBYTE, LEX_BOOL, LEX_DEF, LEX_MAIN, LEX_FUNCTION, LEX_RETURN, LEX_PRINT, LEX_GET, LEX_IF, LEX_ELIF, LEX_ELSE,

@@ -9,6 +9,9 @@
 #include <sstream>
 #include "tchar.h"
 using namespace std;
+using namespace std::chrono;
+
+bool DEBUG_MODE = false;
 
 #include "Error.h"
 #include "Parm.h"
@@ -19,52 +22,62 @@ using namespace std;
 #include "GRB.h"
 #include "Semantic.h"
 #include "Generation.h"
-#include "Tests.h"
+#include "BAT.h"
+
 
 int _tmain(int argc, wchar_t* argv[])
 {
 	setlocale(LC_ALL, "Russian");
-	auto start = chrono::steady_clock::now();
+	auto program_start = chrono::steady_clock::now();
 	std::ios::sync_with_stdio(false);
-	//Tests::TestProgramm();
+	using time = std::chrono::steady_clock;
+
 	Log::LOG log;
 	try
 	{
-		Parm::PARM parm = Parm::getparm(argc, argv);
+		Parm::PARM parm = Parm::GetParm::parm(argc, argv);
 		log = Log::LOG(parm);
-		log.WriteLine("Тест: ", "без ошибок", "");
 		log.WriteLog();
 		log.WriteParm(parm);
-
 		In::IN in = In::getin(parm.in);
 
 		IT::IdTable IT(in.lexems);
 		LT::LexTable LT(in.lexems);
 
-		LT.LexAnalysis(in.text, IT); 
-		
+		auto start = time::now();
+		LT.LexAnalysis(in.text, IT);
+		auto lex_time = duration_cast<milliseconds>(time::now() - start).count();
+
 		log.WriteLexTable(LT);
 		log.WriteIdTable(IT);
 
-		MFST::Mfst mfst(LT, GRB::getGreibach(), parm.debug);
-
+		start = time::now();
+		MFST::Mfst mfst(LT, GRB::getGreibach());
 		mfst.start();
+
 		mfst.savededucation();
 		mfst.printrules();
 
+		auto synt_time = duration_cast<milliseconds>(time::now() - start).count();
+
+		start = time::now();
 		SEM::Semantic semantic(LT, IT);
 		semantic.Analysis();
+		auto sem_time = duration_cast<milliseconds>(time::now() - start).count();
 
 		LT.BuildPolish(IT, semantic.GetExprPos());
 
-		log.WriteLexTable(LT);
-		log.WriteIdTable(IT);
+		start = time::now();
 		Gen::Generator generator(LT, IT, parm.out);
 		generator.Generate();
+		auto gen_time = duration_cast<milliseconds>(time::now() - start).count();
 
-		cout << "-------------------------------------------------------------------------------\n";
-		cout << "Программа завершена успешно!" << endl;
-		cout << "Время выполнения: " << chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - start).count() << "мс\n";
+		cout << "\n-------------------------------------------------------------------------------\n";
+		cout << "Генерация завершена успешно!" << endl;
+		log.WriteResultTime(lex_time, synt_time, sem_time, gen_time, duration_cast<milliseconds>(steady_clock::now() - program_start).count());
+
+		BAT::Generate(parm);
+		system("call \"C:\\Users\\dimde\\OneDrive\\Рабочий стол\\ЯП\\Курсовой\\DDA-2020\\DDA-2020\\compile.bat\"");
 		return 1;
 	}
 	catch (Error::ERROR error)
@@ -73,10 +86,9 @@ int _tmain(int argc, wchar_t* argv[])
 	}
 	catch (queue<Error::ERROR>& errors)
 	{
-		log.WriteErrors(errors);		
+		log.WriteErrors(errors);
 	}
 	cout << "\n-------------------------------------------------------------------------------" << endl;
 	cout << "Ошибка... Выход из программы" << endl;
 	return 0;
 }
-	

@@ -80,13 +80,13 @@
     <ClInclude Include="Parm.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Tests.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Semantic.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Generation.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="BAT.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

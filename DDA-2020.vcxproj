@@ -167,6 +167,7 @@
     <ClCompile Include="Semantic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BAT.h" />
     <ClInclude Include="Error.h" />
     <ClInclude Include="FST.h" />
     <ClInclude Include="Generation.h" />
@@ -178,7 +179,6 @@
     <ClInclude Include="MFST.h" />
     <ClInclude Include="Parm.h" />
     <ClInclude Include="Semantic.h" />
-    <ClInclude Include="Tests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

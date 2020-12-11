@@ -6,9 +6,7 @@ namespace SEM
 
 	void Semantic::Analysis()
 	{
-
 		CheckParameters();
-
 		CheckExprTypes();
 		if (!errors.empty()) throw errors;
 	}
@@ -41,7 +39,7 @@ namespace SEM
 	{
 		int left_begin, pos;
 		LT::Entry entry;
-		IT::IDDATATYPE expected_type = IT::IDDATATYPE::NONE, res;
+		IT::IDDATATYPE expected_type = IT::IDDATATYPE::NONE, res = IT::IDDATATYPE::NONE;
 		for (int i = 0; i < LexTable.Size();i++)
 		{
 			entry = LexTable.GetEntry(i);
@@ -81,8 +79,21 @@ namespace SEM
 				if (entry.idxLex == LT::lex_inc || entry.idxLex == LT::lex_dec)
 				{
 					res = GetExprType(i);
-					if (res != IT::NUMB && res != IT::UBYTE) errors.push(ERROR_THROW_L(212, entry.sn));
+					if (res != IT::NUMB && res != IT::UBYTE) errors.push(ERROR_THROW_L(215, entry.sn));
 				}
+				break;
+			case LEX_FOR:
+				entry = LexTable.GetEntry(i+1);
+				// for i in 0..1 step i++ 
+				//     ^
+				if(IdTable.GetEntry(entry.idxTI).iddatatype != IT::NUMB && IdTable.GetEntry(entry.idxTI).iddatatype != IT::UBYTE)
+					errors.push(ERROR_THROW_L(215, entry.sn));
+
+				// for i in 0..9 step i++ 
+				//          ^  ^
+				if ((IdTable.GetEntry(LexTable.GetEntry(i + 3).idxTI).iddatatype != IT::NUMB && IdTable.GetEntry(LexTable.GetEntry(i + 3).idxTI).iddatatype != IT::UBYTE) ||
+					(IdTable.GetEntry(LexTable.GetEntry(i + 5).idxTI).iddatatype != IT::NUMB && IdTable.GetEntry(LexTable.GetEntry(i + 5).idxTI).iddatatype != IT::UBYTE))
+					errors.push(ERROR_THROW_L(216, entry.sn));
 				break;
 			default:
 				break;
@@ -96,7 +107,7 @@ namespace SEM
 		LT::Entry lt_entry = LexTable.GetEntry(pos);
 		IT::Entry it_entry;
 		IT::IDDATATYPE datatype = IT::IDDATATYPE::NONE, expected_type = IT::IDDATATYPE::NONE;
-		for (; (lt_entry.lexema != LEX_SEMICOLON) && (lt_entry.lexema != LEX_CONDITION) && (lt_entry.lexema != LEX_LEFTBRACE) && (lt_entry.lexema != LEX_TO) && (lt_entry.lexema != LEX_COMPOP); pos++, lt_entry = LexTable.GetEntry(pos))
+		for (; !LT::LexTable::IsExprEnd(lt_entry.lexema); pos++, lt_entry = LexTable.GetEntry(pos))
 		{
 			if (lt_entry.lexema == LEX_ID || lt_entry.lexema == LEX_LITERAL)
 			{
@@ -146,6 +157,7 @@ namespace SEM
 		}
 		return false;
 	}
+
 	std::vector<int> Semantic::GetExprPos() const
 	{
 		return expr_pos;

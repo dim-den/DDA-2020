@@ -16,7 +16,7 @@ namespace IT
 		return default_library;
 	}
 
-	IdTable::IdTable(int size) : maxsize(size)
+	IdTable::IdTable(int size) : maxsize(size + TI_LIBRARYSIZE)
 	{
 		if (size > TI_MAXSIZE) throw ERROR_THROW(124);
 		this->size = 0;		

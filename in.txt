@@ -50,6 +50,7 @@ bool function CheckMask(string mask)
 			++octets;
 			buff = "";
 		}
+		
 		else => return false;
 	} 
 	if(octets != 4) => return false;

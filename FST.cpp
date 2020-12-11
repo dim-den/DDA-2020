@@ -5,17 +5,20 @@
 using namespace std;
 namespace Fst
 {
-	RELATION::RELATION(char c, short nn) {
+	RELATION::RELATION(char c, short nn) 
+	{
 		symbol = c;
 		nnode = nn;
 	};
 
-	NODE::NODE() {
+	NODE::NODE() 
+	{
 		n_relation = 0;
 		RELATION* relations = nullptr;
 	};
 
-	NODE::NODE(short n, RELATION rel, ...) {
+	NODE::NODE(short n, RELATION rel, ...) 
+	{
 		n_relation = n;
 		RELATION* p = &rel;
 		relations = new RELATION[n];
@@ -23,7 +26,8 @@ namespace Fst
 			relations[i] = p[i];
 	};
 
-	FST::FST(char* s, short ns, NODE n, ...) {
+	FST::FST(char* s, short ns, NODE n, ...) 
+	{
 		string = s;
 		nstates = ns;
 		nodes = new NODE[ns];
@@ -37,7 +41,8 @@ namespace Fst
 
 	}
 
-	FST::FST(short ns, NODE n, ...) {
+	FST::FST(short ns, NODE n, ...) 
+	{
 		nstates = ns;
 		nodes = new NODE[ns];
 		NODE* p = &n;
@@ -48,7 +53,8 @@ namespace Fst
 		position = -1;
 	}
 
-	bool step(FST& fst, short* rstates) {
+	bool step(FST& fst, short* rstates) 
+	{
 		bool rc = false;
 		std::swap(rstates, fst.rstates);
 		for (short i = 0; i < fst.nstates; i++)
@@ -66,7 +72,8 @@ namespace Fst
 		return rc;
 	};
 
-	int execute(FST& fst) {
+	int execute(FST& fst) 
+	{
 		short* rstates = new short[fst.nstates];
 		memset(rstates, 0xff, sizeof(short) * fst.nstates);
 		short lstring = strlen(fst.string);
@@ -86,8 +93,8 @@ namespace Fst
 		Fst::NODE p;
 		short node1 = 1, node2 = 2;
 		const int eng_size = 26, rus_size = 33, numb_size = 10;
-		const int  punctuations_size = 9;
-		const char punctuations[punctuations_size] = { ',', '!', '?', ':', '-', '.', '_', '\'', ' ' };
+		const int  punctuations_size = 10;
+		const char punctuations[punctuations_size] = { ',', '!', '?', ':', '-', '.', '_', '\'', '/', ' ' };
 		const int arifmetic_size = 2;
 		const char arifmetic[arifmetic_size] = { '+', '-' };
 		if (!as.str_lit && !as.ubt_lit) {

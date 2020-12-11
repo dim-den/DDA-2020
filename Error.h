@@ -1,7 +1,7 @@
 #pragma once
-#define ERROR_THROW(id) Error::geterror(id)
-#define ERROR_THROW_IN(id, l, c) Error::geterrorin(id, l, c )
-#define ERROR_THROW_L(id, l) Error::geterrorl(id, l)
+#define ERROR_THROW(id) Error::GetError::error(id)
+#define ERROR_THROW_L(id, l)  Error::GetError::error(id, l)
+#define ERROR_THROW_IN(id, l, c)  Error::GetError::error(id, l, c)
 #define ERROR_ENTRY(id, m) {id, m, {-1, -1}} 
 #define ERROR_MAXSIZE_MESSAGE 200 
 #define ERROR_ENTRY_NODEF(id) ERROR_ENTRY(-id, "Неопределенная ошибка") 
@@ -27,8 +27,13 @@ namespace Error
 		} inext;
 	};
 
-	ERROR geterror(int id); // сформировать ERROR для ERROR_THROW
-	ERROR geterrorl(int id, int line); // сформировать ERROR для ERROR_THROW_L
-	ERROR geterrorin(int id, int line, int col); // сформировать ERROR для ERROR_THROW_IN
+	static class GetError
+	{
+	public:
+		static ERROR error(int id);
+		static ERROR error(int id, int line);	
+		static ERROR error(int id, int line, int col);
+	
+	};
 
 };

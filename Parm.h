@@ -19,12 +19,15 @@ namespace Parm
 		wchar_t in[PARM_MAX_SIZE];
 		wchar_t out[PARM_MAX_SIZE];
 		wchar_t log[PARM_MAX_SIZE];
-		bool debug = false;
 	};
 
-	PARM getparm(int argc, wchar_t* argv[]);
-	wchar_t* setparm(wchar_t parm_in[300], wchar_t* default_ext);
-	wchar_t* setparm(wchar_t* argv, size_t skip);
+	static class GetParm
+	{
+	public:
+		static PARM parm(int argc, wchar_t* argv[]);
+	private:
+		static wchar_t* setparm(wchar_t parm_in[300], wchar_t* default_ext);
+		static wchar_t* setparm(wchar_t* argv, size_t skip);
+	};
 
-	
 }

@@ -5,19 +5,23 @@ using namespace std;
 
 #define output(message)  if(debug_mode) { std::cout << message; *stream << message;} \
 						 else *stream << message
+
+extern bool DEBUG_MODE;
+
 namespace Log
 {
 	LOG::LOG() : logfile(L""), stream(nullptr) {}
 
-	LOG::LOG(Parm::PARM& parm) {
-
+	LOG::LOG(Parm::PARM& parm) 
+	{
 		stream = new ofstream(parm.log);
-		debug_mode = parm.debug;
+		debug_mode = DEBUG_MODE;
 		if (!stream->is_open()) throw ERROR_THROW(112);
 		wcscpy_s(this->logfile, parm.log);
 	}
 
-	void LOG::WriteLine(const char* c, ...) {
+	void LOG::WriteLine(const char* c, ...) 
+	{
 		int i = 0;
 		const char** str = &c;
 		while (str[i] != "")
@@ -51,7 +55,8 @@ namespace Log
 		}
 	}
 
-	void LOG::WriteLog() { // вывести в протокол заголовок
+	void LOG::WriteLog()  // вывести в протокол заголовок
+	{
 		tm* timeinfo;
 		time_t ttime;
 		time(&ttime);
@@ -61,7 +66,8 @@ namespace Log
 		output(info);
 	}
 
-	void LOG::WriteParm(const Parm::PARM& parm) {// вывести информацию о входных параметрах
+	void LOG::WriteParm(const Parm::PARM& parm) // вывести информацию о входных параметрах
+	{
 		char i[PARM_MAX_SIZE], o[PARM_MAX_SIZE], l[PARM_MAX_SIZE];
 		wcstombs(i, parm.in, PARM_MAX_SIZE);
 		wcstombs(o, parm.out, PARM_MAX_SIZE);
@@ -70,17 +76,19 @@ namespace Log
 			<< "\n-log: " << l
 			<< "\n-out: " << o
 			<< "\n-in:  " << i 
-			<< "\n-debug: " << parm.debug << '\n');
+			<< "\n-debug: " << DEBUG_MODE << '\n');
 	}
 
-	void LOG::WriteIn(const In::IN& in) { // вывести информацию о входном потоке
+	void LOG::WriteIn(const In::IN& in) // вывести информацию о входном потоке
+	{ 
 		output("n ------ Исходные данные ------ " <<
 			"\nВсего символов: " << in.size <<
 			"\nВсего строк: " << in.lines <<
 			"\nПропущено: " << in.ignor << "\n");
 	}
 
-	void LOG::WriteError(const Error::ERROR& error) { // вывести информацию об ошибке
+	void LOG::WriteError(const Error::ERROR& error) // вывести информацию об ошибке
+	{ 
 		bool copy = debug_mode;
 		debug_mode = true;
 		if (stream != nullptr) {
@@ -107,17 +115,18 @@ namespace Log
 			LT::Entry ent = lextable.GetEntry(i);
 			if (pr != ent.sn)
 			{
-				output(endl << setw(3) << setfill('0') << ent.sn << " ");
+				output(endl << right <<setw(3) << setfill('0') << ent.sn << " ");
 				pr = ent.sn;
 			}
 			output(ent.lexema);
 		}
 	}
 
-	void LOG::WriteIdTable(IT::IdTable& idtable) {
+	void LOG::WriteIdTable(IT::IdTable& idtable) 
+	{
 		output("\n\n \t\t------ Таблица идентификаторов ------ \n");
 		int IDsize = idtable.Size();
-		output('\n' << setw(ID_MAXSIZE) << setfill(' ') << left << "Имя" << setw(ID_MAXSIZE) << "Область видимости" << left << "\tИндекс\tТип\t\t\tТип данных\tЗначение\n");
+		output('\n' << setw(ID_MAXSIZE) << setfill(' ') << left << "Имя" << setw(ID_MAXSIZE) << "Область видимости" << left << "\tИндекс\tТип\t\tТип данных\tЗначение\n");
 		for (int i = 0; i < IDsize;i++) {
 			IT::Entry ent = idtable.GetEntry(i);
 
@@ -170,7 +179,19 @@ namespace Log
 		}
 	}
 
-	void LOG::WriteErrors(std::queue<Error::ERROR>& errors) {
+	void LOG::WriteResultTime(size_t lex_time, size_t synt_time, size_t sem_time, size_t gen_time, size_t overall)
+	{
+		debug_mode = true;
+		output("Время выполнения:\n"
+			<< "Лексический анализ: " << lex_time << "мс\n"
+			<< "Синтаксический анализ: " << synt_time << "мс\n"
+			<< "Семантический анализ: " << sem_time << "мс\n"
+			<< "Генерация кода: " << gen_time << "мс\n"
+			<< "Всего: " << overall << "мс\n");
+	}
+
+	void LOG::WriteErrors(std::queue<Error::ERROR>& errors) 
+	{
 		output("\n\t\t----- Список ошибок -----\n");
 		while (!errors.empty()) {
 			WriteError(errors.front());
