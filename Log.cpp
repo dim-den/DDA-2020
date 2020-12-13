@@ -182,7 +182,7 @@ namespace Log
 	void LOG::WriteResultTime(size_t lex_time, size_t synt_time, size_t sem_time, size_t gen_time, size_t overall)
 	{
 		debug_mode = true;
-		output("Время выполнения:\n"
+		output("\nВремя выполнения:\n"
 			<< "Лексический анализ: " << lex_time << "мс\n"
 			<< "Синтаксический анализ: " << synt_time << "мс\n"
 			<< "Семантический анализ: " << sem_time << "мс\n"
@@ -193,7 +193,8 @@ namespace Log
 	void LOG::WriteErrors(std::queue<Error::ERROR>& errors) 
 	{
 		output("\n\t\t----- Список ошибок -----\n");
-		while (!errors.empty()) {
+		while (!errors.empty()) 
+		{
 			WriteError(errors.front());
 			errors.pop();
 		}

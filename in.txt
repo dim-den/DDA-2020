@@ -1,80 +1,48 @@
-number function fi(number x, number y) 
-{
-	def number z;
-	if(x + 11 >= y) => z=x*(x+y);
-	elif(x == 5 or x > 10) => z = x | y;
-	elif (x < y and x - 4 != 3) => z = x & y * 5;
-	else =>	z=~y+x;
-	return z;  
-}
-
-bool function IsRoot(ubyte i, ubyte j)
-{
-	def number sum = -6;
-	if( i <= '9' and i >= '0') => print "число";
-	for i in 0..99 step ++i
-	{
-	  sum = sum + 1;
-	}
-	print sum;
-	if(j == i * i) => return true;
- 	return false;
-}
-
-bool function CheckMask(string mask)
+bool function CheckAddress(string address)
 {
 	def number octets = 0;
-	def number numbers = 0;
-	def number numb = 0;
-	def number prevNumber = 256;
-	def ubyte maskSize = strlength(mask);
+	def number numbers = 0;	
+	def ubyte length = strlength(address);
 	def string buff;
 	def ubyte i;
-	for i in 0..maskSize step ++i
+	for i in 0..length step ++i
 	{
-		if(mask[i] <= '9' and mask[i] >= '0') 
+		if(address[i] <= '9' and address[i] >= '0')
 		{
 			if(numbers>3) => return false;
-			buff[numbers] = mask[i];
+			buff[numbers] = address[i];
 			++numbers;
 		}
-		elif(mask[i] == '.' or i == maskSize - 1)
+		elif(address[i] == '.')
 		{
-			numb = ToNumber(buff);
-			if(numb > 255) => return false;
-			elif (prevNumber < 255 and numb != 0) => return false;
-			elif (octets == 0 and numb == 0) => return false;
-			elif (numb != 0 and numb != 128 and numb != 192 and numb != 224 and numb != 240 and numb != 248 and numb != 252 and numb != 254 and numb != 255) => return false;
-			prevNumber = numb;
+			if(ToNumber(buff) > 255 or numbers == 0) => return false ;
 			numbers = 0;
 			++octets;
-			buff = "";
+			if(strcopy(buff,"") == false) => return false;
 		}
-		
 		else => return false;
 	} 
-	if(octets != 4) => return false;
+	if(ToNumber(buff) > 255 or octets != 3 or numbers == 0) => return false;
 	return true;
 }
 
 main
 {
-	def number x;
-	get x;
-	++x;
-	def string sa = "hey";
-	def string sb; 
-	if(strcopy(sb,sa) == true) => print "успешное копирование"; 	
-	else => print "скопировать строку не удалось"; 	
-	def bool res = strconcat(sa, ", you are welcome!");
-	def ubyte ua = 'd';
-	def ubyte ub = sa[3];
-	print ub;
-	def bool b = IsRoot(ua, ub);  
-	def number z = fi(x, 29); 
-	print sa;  
-	print z;
-	def number test = ua;
-	print test; 
-	return 0; 
+	def string ip;
+	print "¬ведите ip-адрес: ";
+	get ip;
+	if(CheckAddress(ip) == false)
+	{
+		print "¬веден не правильный ip-адрес.";
+		return -1;
+	}
+	else => print "¬ведены верные данные сети!";
+	def string mask;
+	print "¬ведите маску сети:";
+	get mask;
+	def bool res = strconcat(ip, "/") & strconcat(ip, mask);
+	if(res == true) => print ip;
+	def number value = 015;
+	print ~value &  ToNumber(mask) | 3;
+	return 0;
 }

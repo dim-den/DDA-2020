@@ -56,7 +56,8 @@ namespace In
 		return in;
 	}
 
-	bool is_expr(char symbol) {
+	bool is_expr(char symbol) 
+	{
 		for (short i = 0; i < EXPR_COUNT;i++)
 			if (expr[i] == symbol) return true;
 		return false;

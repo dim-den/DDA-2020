@@ -1,9 +1,0 @@
-main
-{
-def number n = 015;
-def number nn = 15;
-print n;
-print n * nn;
-
-return 0;
-}

@@ -10,7 +10,8 @@ namespace Gen
 				*out << it_entry.id << '\n';
 
 
-	Generator::Generator(const LT::LexTable& lexTable, const IT::IdTable& idTable, wchar_t* out) : idTable(idTable), lexTable(lexTable) {
+	Generator::Generator(const LT::LexTable& lexTable, const IT::IdTable& idTable, wchar_t* out) : idTable(idTable), lexTable(lexTable) 
+	{
 		std::wstring name = out;
 		this->out = new std::ofstream(L"..\\DDA-2020\\" + name);
 	}

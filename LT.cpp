@@ -8,7 +8,8 @@ using namespace std;
 
 namespace LT
 {
-	LexTable::LexTable(int size) : maxsize(size) {
+	LexTable::LexTable(int size) : maxsize(size) 
+	{
 		if (size > LT_MAXSIZE) throw ERROR_THROW(121);
 		this->size = 0;
 		table = new Entry[size];
@@ -28,9 +29,7 @@ namespace LT
 
 	LexTable::~LexTable()
 	{
-		if (table != nullptr) {
-			delete[] table;
-		}
+		if (table != nullptr) delete[] table;
 	}
 
 	void LexTable::operator=(const LexTable& rhs)
@@ -48,6 +47,7 @@ namespace LT
 		queue <Error::ERROR> errors;
 		IT::IDDATATYPE nxt_id_datatype = IT::IDDATATYPE::NONE;
 		IT::IDTYPE nxt_id_type = IT::IDTYPE::N;
+
 		std::istringstream code(reinterpret_cast<char*>(text));
 		string line, space_name;
 		int add_id_res = 0, lit_count = 0, func_call_count = 0, opened_leftbrace = 0;
@@ -257,7 +257,8 @@ namespace LT
 			else if (iddatatype == IT::IDDATATYPE::STR) ent.value.vstr.len = TI_STR_DEFAULT;
 			else if (iddatatype == IT::IDDATATYPE::UBYTE) ent.value.vubyte = TI_UBYTE_DEFAULT;
 			else if (iddatatype == IT::IDDATATYPE::BOOL) ent.value.vbool = TI_BOOL_DEFAULT;
-			if (idtype == IT::IDTYPE::F) {
+			if (idtype == IT::IDTYPE::F) 
+			{
 				idtype = IT::IDTYPE::P;
 				if (space_name == LEX_GLOBAL) space_name = input;
 			}
@@ -440,7 +441,8 @@ namespace LT
 		return func_call_pos;
 	}
 
-	int LexTable::Size() const {
+	int LexTable::Size() const 
+	{
 		return size;
 	}
 }

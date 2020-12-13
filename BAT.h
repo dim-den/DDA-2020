@@ -23,10 +23,10 @@ public:
 
 		bat << "cd \"C:\\Users\\dimde\\OneDrive\\Рабочий стол\\ЯП\\Курсовой\\DDA-2020\\DDA-2020\"" << endl;
 		bat << "ml /c " << out_name << ".asm" << endl;
-		bat << "link /OPT:NOREF " << out_name << ".obj /DYNAMICBASE \"C:\\Users\\dimde\\OneDrive\\Рабочий стол\\ЯП\\Курсовой\\DDA-2020\\Release\\StandartLibrary.lib\" /SUBSYSTEM:console /out:\"C:\\Users\\dimde\\OneDrive\\Рабочий стол\\ЯП\\Курсовой\\DDA-2020\\Debug\\" << out_name << ".exe\"" << endl;
+		bat << "link /OPT:NOREF " << out_name << ".obj /DYNAMICBASE \"C:\\Users\\dimde\\OneDrive\\Рабочий стол\\ЯП\\Курсовой\\DDA-2020\\Release\\StandartLibrary.lib\" /SUBSYSTEM:console /out:\"C:\\Users\\dimde\\OneDrive\\Рабочий стол\\ЯП\\Курсовой\\DDA-2020\\Приложение\\" << out_name << ".exe\"" << endl;
 		
 		bat << "cls\n";
-		bat << "\"C:\\Users\\dimde\\OneDrive\\Рабочий стол\\ЯП\\Курсовой\\DDA-2020\\Debug\\" << out_name << ".exe\"" << endl;
+		bat << "\"C:\\Users\\dimde\\OneDrive\\Рабочий стол\\ЯП\\Курсовой\\DDA-2020\\Приложение\\" << out_name << ".exe\"" << endl;
 		bat << "pause";
 
 	}

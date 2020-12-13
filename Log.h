@@ -13,9 +13,10 @@
 
 namespace Log
 {
-	class LOG {
+	class LOG
+	{
 	public:
-		LOG(); 
+		LOG();
 		LOG(Parm::PARM& parm);
 		void WriteLine(const char* c, ...);
 		void WriteLine(const wchar_t* c, ...);
