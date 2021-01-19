@@ -3,7 +3,7 @@
 #pragma warning(disable: 4996)
 using namespace std;
 
-#define output(message)  if(debug_mode) { std::cout << message; *stream << message;} \
+#define output(message)  if(debug_mode) { std::cout << message; if(stream != nullptr) *stream << message;} \
 						 else *stream << message
 
 extern bool DEBUG_MODE;
@@ -12,7 +12,7 @@ namespace Log
 {
 	LOG::LOG() : logfile(L""), stream(nullptr) {}
 
-	LOG::LOG(Parm::PARM& parm) 
+	LOG::LOG(Parm::PARM& parm)
 	{
 		stream = new ofstream(parm.log);
 		debug_mode = DEBUG_MODE;
@@ -20,7 +20,7 @@ namespace Log
 		wcscpy_s(this->logfile, parm.log);
 	}
 
-	void LOG::WriteLine(const char* c, ...) 
+	void LOG::WriteLine(const char* c, ...)
 	{
 		int i = 0;
 		const char** str = &c;
@@ -28,7 +28,7 @@ namespace Log
 			* stream << str[i++];
 		*stream << IN_CODE_ENDL;
 	}
-	
+
 	void LOG::WriteLine(const wchar_t* c, ...)
 	{
 		int i = 0;
@@ -75,12 +75,12 @@ namespace Log
 		output("\n ------ Параметры ------ "
 			<< "\n-log: " << l
 			<< "\n-out: " << o
-			<< "\n-in:  " << i 
-			<< "\n-debug: " << DEBUG_MODE << '\n');
+			<< "\n-in:  " << i
+			<< "\n-debug: " << DEBUG_MODE << IN_CODE_ENDL);
 	}
 
 	void LOG::WriteIn(const In::IN& in) // вывести информацию о входном потоке
-	{ 
+	{
 		output("n ------ Исходные данные ------ " <<
 			"\nВсего символов: " << in.size <<
 			"\nВсего строк: " << in.lines <<
@@ -88,22 +88,22 @@ namespace Log
 	}
 
 	void LOG::WriteError(const Error::ERROR& error) // вывести информацию об ошибке
-	{ 
-		bool copy = debug_mode;
+	{
+		bool tmp = move(debug_mode);
 		debug_mode = true;
-		if (stream != nullptr) {
-			output(endl);
-			if (100 <= error.id && error.id <= 109) output("PARM.");
-			else if (110 <= error.id && error.id <= 119) output("IN.");
-			else if (120 <= error.id && error.id <= 139) output("LEX.");
-			else if (200 <= error.id && error.id <= 299) output("SEM.");
-			else if (600 <= error.id && error.id <= 699) output("SYN.");
-			else output("SYST.");
-			output(error.id << ": " << error.message);
-			if (error.inext.line != -1) output(", строка " << error.inext.line);
-			if (error.inext.col != -1 ) output(", позиция " << error.inext.col);
-		}
-		debug_mode = copy;
+
+		output(IN_CODE_ENDL);
+		if (100 <= error.id && error.id <= 109) output("PARM.");
+		else if (110 <= error.id && error.id <= 119) output("IN.");
+		else if (120 <= error.id && error.id <= 139) output("LEX.");
+		else if (200 <= error.id && error.id <= 299) output("SEM.");
+		else if (600 <= error.id && error.id <= 699) output("SYN.");
+		else output("SYST.");
+		output(error.id << ": " << error.message);
+		if (error.inext.line != -1) output(", строка " << error.inext.line);
+		if (error.inext.col != -1) output(", позиция " << error.inext.col);
+
+		debug_mode = move(tmp);
 	}
 
 	void LOG::WriteLexTable(LT::LexTable& lextable)
@@ -115,27 +115,29 @@ namespace Log
 			LT::Entry ent = lextable.GetEntry(i);
 			if (pr != ent.sn)
 			{
-				output(endl << right <<setw(3) << setfill('0') << ent.sn << " ");
+				output(endl << right << setw(3) << setfill('0') << ent.sn << " ");
 				pr = ent.sn;
 			}
 			output(ent.lexema);
 		}
 	}
 
-	void LOG::WriteIdTable(IT::IdTable& idtable) 
+	void LOG::WriteIdTable(IT::IdTable& idtable)
 	{
 		output("\n\n \t\t------ Таблица идентификаторов ------ \n");
 		int IDsize = idtable.Size();
-		output('\n' << setw(ID_MAXSIZE) << setfill(' ') << left << "Имя" << setw(ID_MAXSIZE) << "Область видимости" << left << "\tИндекс\tТип\t\tТип данных\tЗначение\n");
-		for (int i = 0; i < IDsize;i++) {
+		output(IN_CODE_ENDL << setw(ID_MAXSIZE) << setfill(' ') << left << "Имя" << setw(ID_MAXSIZE) << "Область видимости" << left << "\tИндекс\tТип\t\tТип данных\tЗначение\n");
+		for (int i = 0; i < IDsize;i++)
+		{
 			IT::Entry ent = idtable.GetEntry(i);
 
 			output(setw(ID_MAXSIZE) << setfill(' ') << left << ent.id);
 			output(setw(ID_MAXSIZE) << setfill(' ') << left << ent.spacename << '\t');
 
-			 output(setw(4) << setfill('0') << right << ent.idxfirstLE << '\t');
+			output(setw(4) << setfill('0') << right << ent.idxfirstLE << '\t');
 
-			switch (ent.idtype) {
+			switch (ent.idtype)
+			{
 			case IT::IDTYPE::V:
 				output("variable"); break;
 			case IT::IDTYPE::F:
@@ -144,7 +146,6 @@ namespace Log
 				output("parameter"); break;
 			case IT::IDTYPE::L:
 				output("literal\t"); break;
-			default: break;
 			}
 			output('\t');
 
@@ -175,7 +176,7 @@ namespace Log
 				break;
 			}
 			}
-			output('\n');
+			output(IN_CODE_ENDL);
 		}
 	}
 
@@ -190,13 +191,13 @@ namespace Log
 			<< "Всего: " << overall << "мс\n");
 	}
 
-	void LOG::WriteErrors(std::queue<Error::ERROR>& errors) 
+	void LOG::WriteErrors(std::queue<Error::ERROR>& errors)
 	{
 		output("\n\t\t----- Список ошибок -----\n");
-		while (!errors.empty()) 
+		while (!errors.empty())
 		{
 			WriteError(errors.front());
 			errors.pop();
 		}
 	}
-}  	
+}

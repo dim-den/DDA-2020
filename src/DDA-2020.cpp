@@ -22,7 +22,7 @@ bool DEBUG_MODE = false;
 #include "GRB.h"
 #include "Semantic.h"
 #include "Generation.h"
-#include "BAT.h"
+//#include "BAT.h"
 
 
 int _tmain(int argc, wchar_t* argv[])
@@ -76,11 +76,11 @@ int _tmain(int argc, wchar_t* argv[])
 		cout << "Генерация завершена успешно!" << endl;
 		log.WriteResultTime(lex_time, synt_time, sem_time, gen_time, duration_cast<milliseconds>(steady_clock::now() - program_start).count());
 
-		BAT::Generate(parm);
-		system("call \"C:\\Users\\dimde\\OneDrive\\Рабочий стол\\ЯП\\Курсовой\\DDA-2020\\DDA-2020\\compile.bat\"");
+		//BAT::Generate(parm);
+		//system("call \"C:\\Users\\dimde\\OneDrive\\Рабочий стол\\ЯП\\Курсовой\\DDA-2020\\DDA-2020\\compile.bat\"");
 		return 1;
 	}
-	catch (Error::ERROR error)
+	catch (Error::ERROR& error)
 	{
 		log.WriteError(error);
 	}
